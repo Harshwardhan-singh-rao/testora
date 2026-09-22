@@ -11,6 +11,11 @@ export default function AdminProfilePage() {
   const router = useRouter();
   const [admin, setAdmin] = useState<AdminUser | null>(null);
 
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordStatus, setPasswordStatus] = useState<{ type: 'success' | 'error', msg: string } | null>(null);
+
   useEffect(() => {
     const active = getCurrentAdmin();
     if (!active || (active.status === 'PENDING_APPROVAL' && active.role !== 'SUPER_ADMIN') || active.status === 'REJECTED') {
@@ -23,6 +28,39 @@ export default function AdminProfilePage() {
   const handleLogout = () => {
     logoutAdmin();
     router.push('/admin/login');
+  };
+
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordStatus(null);
+    if (!admin) return;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      setPasswordStatus({ type: 'error', msg: 'All fields are required.' });
+      return;
+    }
+    if (currentPassword !== admin.password) {
+      setPasswordStatus({ type: 'error', msg: 'Current password is incorrect.' });
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordStatus({ type: 'error', msg: 'New passwords do not match.' });
+      return;
+    }
+    if (newPassword.length < 6) {
+      setPasswordStatus({ type: 'error', msg: 'New password must be at least 6 characters.' });
+      return;
+    }
+
+    const { updateAdminPassword } = await import('@/lib/auth');
+    updateAdminPassword(admin.id, newPassword);
+    
+    // Update local state to reflect the new password internally
+    setAdmin({ ...admin, password: newPassword });
+    setPasswordStatus({ type: 'success', msg: 'Password updated successfully!' });
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmPassword('');
   };
 
   if (!admin) return null;
@@ -105,6 +143,66 @@ export default function AdminProfilePage() {
                   })}
                 </div>
               </div>
+            </div>
+
+            </div>
+
+            {/* Change Password Section */}
+            <div className="pt-8 border-t border-slate-100">
+              <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-sky-600" />
+                Change Password
+              </h3>
+              
+              <form onSubmit={handlePasswordChange} className="space-y-4 max-w-md">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Current Password</label>
+                  <input
+                    type="password"
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-sky-500 outline-none"
+                    placeholder="Enter current password"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">New Password</label>
+                    <input
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-sky-500 outline-none"
+                      placeholder="New password"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Confirm New</label>
+                    <input
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-sky-500 outline-none"
+                      placeholder="Confirm password"
+                    />
+                  </div>
+                </div>
+
+                <div className="pt-2 flex items-center gap-4">
+                  <button
+                    type="submit"
+                    className="px-5 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm rounded-xl transition shadow-sm"
+                  >
+                    Update Password
+                  </button>
+                  {passwordStatus && (
+                    <span className={`text-xs font-semibold ${passwordStatus.type === 'success' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                      {passwordStatus.msg}
+                    </span>
+                  )}
+                </div>
+              </form>
             </div>
 
             <div className="pt-6 border-t border-slate-100 flex justify-end">

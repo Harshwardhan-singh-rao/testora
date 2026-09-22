@@ -135,6 +135,33 @@ export const createSuperAdmin = (
   return { success: true };
 };
 
+export const updateAdminPassword = (
+  adminUserId: string,
+  newPassword: string
+): void => {
+  if (typeof window === 'undefined') return;
+  const users = getAdminUsers();
+  const idx = users.findIndex((u) => u.id === adminUserId);
+  if (idx >= 0) {
+    users[idx].password = newPassword;
+    localStorage.setItem(STORAGE_KEYS.ADMIN_USERS, JSON.stringify(users));
+    
+    // Sync with server if online
+    fetch('/api/data', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'saveAdminUser', adminUser: users[idx] }),
+    }).catch(console.error);
+
+    // Update current admin if it's the logged-in user
+    const current = getCurrentAdmin();
+    if (current && current.id === adminUserId) {
+      current.password = newPassword;
+      setCurrentAdmin(current);
+    }
+  }
+};
+
 export const updateAdminStatus = (
   adminUserId: string,
   newStatus: 'APPROVED' | 'REJECTED'
