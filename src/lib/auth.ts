@@ -23,7 +23,7 @@ export const getAdminUsers = (): AdminUser[] => {
 export const saveAdminUser = (user: AdminUser): void => {
   if (typeof window === 'undefined') return;
   const users = getAdminUsers();
-  const idx = users.findIndex((u) => u.id === user.id || u.email.toLowerCase() === user.email.toLowerCase());
+  const idx = users.findIndex((u) => u.id === user.id || (u.email && user.email && u.email.toLowerCase() === user.email.toLowerCase()));
   if (idx >= 0) {
     users[idx] = user;
   } else {
@@ -62,7 +62,7 @@ export const loginAdmin = (
   passStr: string
 ): { success: boolean; user?: AdminUser; error?: string } => {
   const users = getAdminUsers();
-  const user = users.find((u) => u.email.toLowerCase() === emailStr.trim().toLowerCase());
+  const user = users.find((u) => u.email && emailStr && u.email.toLowerCase() === emailStr.trim().toLowerCase());
 
   if (!user) {
     return { success: false, error: 'No admin account found with this email address.' };
@@ -87,7 +87,7 @@ export const signUpAdmin = (
 ): { success: boolean; user?: AdminUser; error?: string } => {
   const users = getAdminUsers();
   const normEmail = emailStr.trim().toLowerCase();
-  const existing = users.find((u) => u.email.toLowerCase() === normEmail);
+  const existing = users.find((u) => u.email && u.email.toLowerCase() === normEmail);
 
   if (existing) {
     return { success: false, error: 'An admin account with this email already exists.' };

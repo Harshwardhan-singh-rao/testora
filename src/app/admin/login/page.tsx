@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ShieldCheck, UserCheck, Lock, Mail, User, Clock, ArrowRight, ShieldAlert, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, UserCheck, Lock, Mail, User, Clock, ArrowRight, ShieldAlert, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 import { getCurrentAdmin, loginAdmin, signUpAdmin, logoutAdmin } from '@/lib/auth';
 import { fetchServerData } from '@/lib/storage';
 import { AdminUser } from '@/types';
@@ -19,6 +19,7 @@ export default function AdminLoginPage() {
   const [name, setName] = useState('');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -142,6 +143,7 @@ export default function AdminLoginPage() {
               {/* TAB SWITCHER */}
               <div className="grid grid-cols-3 gap-1 p-1 rounded-xl bg-slate-900 text-xs font-bold">
                 <button
+                  type="button"
                   onClick={() => {
                     setTab('LOGIN');
                     setErrorMsg(null);
@@ -153,6 +155,7 @@ export default function AdminLoginPage() {
                   Admin Login
                 </button>
                 <button
+                  type="button"
                   onClick={() => {
                     setTab('SUPER_ADMIN');
                     setErrorMsg(null);
@@ -165,6 +168,7 @@ export default function AdminLoginPage() {
                   Super Admin
                 </button>
                 <button
+                  type="button"
                   onClick={() => {
                     setTab('SIGNUP');
                     setErrorMsg(null);
@@ -215,14 +219,23 @@ export default function AdminLoginPage() {
                       <Lock className="h-3.5 w-3.5 text-sky-400" />
                       Password
                     </label>
-                    <input
-                      type="password"
-                      required
-                      placeholder="Enter password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:ring-2 focus:ring-sky-500 outline-none"
-                    />
+                    <div className="relative">
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        required
+                        placeholder="Enter password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full px-3.5 py-2.5 pr-10 rounded-xl bg-slate-900 border border-slate-700 text-white focus:ring-2 focus:ring-sky-500 outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={(e) => { e.preventDefault(); setShowPassword(!showPassword); }}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
                   </div>
 
                   <button
@@ -251,7 +264,7 @@ export default function AdminLoginPage() {
                     <input
                       type="email"
                       required
-                      placeholder="harshrao8058@gmail.com"
+                      placeholder="Enter super admin email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-amber-500/40 text-white focus:ring-2 focus:ring-amber-500 outline-none"
@@ -263,14 +276,23 @@ export default function AdminLoginPage() {
                       <Lock className="h-3.5 w-3.5 text-amber-400" />
                       Super Admin Password
                     </label>
-                    <input
-                      type="password"
-                      required
-                      placeholder="Enter super admin password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-amber-500/40 text-white focus:ring-2 focus:ring-amber-500 outline-none"
-                    />
+                    <div className="relative">
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        required
+                        placeholder="Enter super admin password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full px-3.5 py-2.5 pr-10 rounded-xl bg-slate-900 border border-amber-500/40 text-white focus:ring-2 focus:ring-amber-500 outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={(e) => { e.preventDefault(); setShowPassword(!showPassword); }}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
                   </div>
 
                   <button
@@ -321,14 +343,23 @@ export default function AdminLoginPage() {
                       <Lock className="h-3.5 w-3.5 text-sky-400" />
                       Create Password
                     </label>
-                    <input
-                      type="password"
-                      required
-                      placeholder="Choose a password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:ring-2 focus:ring-sky-500 outline-none"
-                    />
+                    <div className="relative">
+                      <input
+                        type={showPassword ? 'text' : 'password'}
+                        required
+                        placeholder="Choose a password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full px-3.5 py-2.5 pr-10 rounded-xl bg-slate-900 border border-slate-700 text-white focus:ring-2 focus:ring-sky-500 outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={(e) => { e.preventDefault(); setShowPassword(!showPassword); }}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-300"
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
                   </div>
 
                   <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-700 text-[11px] text-slate-400 space-y-1">

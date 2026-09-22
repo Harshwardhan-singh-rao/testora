@@ -55,22 +55,36 @@ export default function AdminDashboardPage() {
 
     setCurrentAdminState(active);
     setAdminUsersState(getAdminUsers());
-    setAssessment(getAssessment(active.email));
-    setCandidates(getCandidates(active.email));
-    setSessions(getSessions(active.email));
+
+    // Super Admin sees ALL data; regular admins only see their own
+    const isSuperAdmin = active.role === 'SUPER_ADMIN';
+    setAssessment(getAssessment(isSuperAdmin ? undefined : active.email));
+    setCandidates(getCandidates(isSuperAdmin ? undefined : active.email));
+    setSessions(getSessions(isSuperAdmin ? undefined : active.email));
   };
 
   useEffect(() => {
-    refreshData();
+    let isRefreshing = false;
+    const safeRefresh = async () => {
+      if (isRefreshing) return;
+      isRefreshing = true;
+      try {
+        await refreshData();
+      } finally {
+        isRefreshing = false;
+      }
+    };
+
+    safeRefresh();
 
     if (typeof window !== 'undefined') {
-      window.addEventListener('focus', refreshData);
-      window.addEventListener('storage', refreshData);
-      const timer = setInterval(refreshData, 2000);
+      window.addEventListener('focus', safeRefresh);
+      window.addEventListener('storage', safeRefresh);
+      const timer = setInterval(safeRefresh, 15000);
 
       return () => {
-        window.removeEventListener('focus', refreshData);
-        window.removeEventListener('storage', refreshData);
+        window.removeEventListener('focus', safeRefresh);
+        window.removeEventListener('storage', safeRefresh);
         clearInterval(timer);
       };
     }

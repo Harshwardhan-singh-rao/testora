@@ -97,14 +97,14 @@ export async function POST(request: Request) {
       db.assessment = assessment;
       if (!db.assessments) db.assessments = [];
       const adminEmail = assessment.adminEmail || 'admin@testora.com';
-      const idx = db.assessments.findIndex((a) => (a.adminEmail && a.adminEmail.toLowerCase() === adminEmail.toLowerCase()) || a.id === assessment.id);
+      const idx = db.assessments.findIndex((a) => (a.adminEmail && adminEmail && a.adminEmail.toLowerCase() === adminEmail.toLowerCase()) || a.id === assessment.id);
       if (idx >= 0) {
         db.assessments[idx] = assessment;
       } else {
         db.assessments.push(assessment);
       }
     } else if (action === 'saveAdminUser' && adminUser) {
-      const idx = db.adminUsers.findIndex((u) => u.id === adminUser.id || u.email.toLowerCase() === adminUser.email.toLowerCase());
+      const idx = db.adminUsers.findIndex((u) => u.id === adminUser.id || (u.email && adminUser.email && u.email.toLowerCase() === adminUser.email.toLowerCase()));
       if (idx >= 0) {
         db.adminUsers[idx] = adminUser;
       } else {
