@@ -42,12 +42,12 @@ export default function AdminLoginPage() {
     });
   }, [router]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg(null);
     setSuccessMsg(null);
 
-    const res = loginAdmin(email, password);
+    const res = await loginAdmin(email, password);
     if (!res.success) {
       setErrorMsg(res.error || 'Failed to login');
       return;

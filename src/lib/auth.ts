@@ -57,10 +57,35 @@ export const setCurrentAdmin = (user: AdminUser | null): void => {
   }
 };
 
-export const loginAdmin = (
+export const loginAdmin = async (
   emailStr: string,
   passStr: string
-): { success: boolean; user?: AdminUser; error?: string } => {
+): Promise<{ success: boolean; user?: AdminUser; error?: string }> => {
+  // Always fetch the latest admin users from the server before login
+  try {
+    const res = await fetch('/api/data');
+    if (res.ok) {
+      const serverData = await res.json();
+      if (serverData.adminUsers && Array.isArray(serverData.adminUsers)) {
+        // Merge server users into localStorage so we have the latest data
+        const localUsers = getAdminUsers();
+        const mergedMap = new Map<string, AdminUser>();
+        // Start with local users
+        for (const u of localUsers) {
+          mergedMap.set(u.email?.toLowerCase() ?? u.id, u);
+        }
+        // Server users overwrite local (server is source of truth)
+        for (const u of serverData.adminUsers) {
+          mergedMap.set(u.email?.toLowerCase() ?? u.id, u);
+        }
+        const merged = Array.from(mergedMap.values());
+        localStorage.setItem(STORAGE_KEYS.ADMIN_USERS, JSON.stringify(merged));
+      }
+    }
+  } catch {
+    // If server is unavailable, fall back to localStorage
+  }
+
   const users = getAdminUsers();
   const user = users.find((u) => u.email && emailStr && u.email.toLowerCase() === emailStr.trim().toLowerCase());
 
