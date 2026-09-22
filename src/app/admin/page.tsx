@@ -277,6 +277,8 @@ export default function AdminDashboardPage() {
   };
 
   const pendingAdminUsers = adminUsers.filter((u) => u.status === 'PENDING_APPROVAL' && u.role !== 'SUPER_ADMIN');
+  const allSuperAdmins = adminUsers.filter((u) => u.role === 'SUPER_ADMIN');
+  const approvedAdmins = adminUsers.filter((u) => u.role === 'ADMIN' && u.status === 'APPROVED');
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Top Clean Header */}
@@ -364,6 +366,88 @@ export default function AdminDashboardPage() {
               </div>
             )}
           </div>
+
+          {/* All Super Admins Table */}
+          <div className="bg-white p-5 rounded-xl border border-amber-200 shadow-sm">
+            <h4 className="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+              <ShieldAlert className="h-4 w-4 text-amber-600" />
+              All Super Admins
+              <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-extrabold border border-amber-300">
+                {allSuperAdmins.length}
+              </span>
+            </h4>
+            {allSuperAdmins.length === 0 ? (
+              <p className="text-xs text-slate-500">No super admins found.</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs text-slate-600 rounded-lg border border-slate-200 overflow-hidden">
+                  <thead className="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200 uppercase tracking-wider text-[11px]">
+                    <tr>
+                      <th className="py-2.5 px-4">Name</th>
+                      <th className="py-2.5 px-4">Email</th>
+                      <th className="py-2.5 px-4">Date Added</th>
+                      <th className="py-2.5 px-4">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {allSuperAdmins.map((u) => (
+                      <tr key={u.id} className="hover:bg-slate-50/80 transition">
+                        <td className="py-2.5 px-4 font-bold text-slate-900">{u.name}</td>
+                        <td className="py-2.5 px-4 text-slate-600 font-mono text-[11px]">{u.email}</td>
+                        <td className="py-2.5 px-4 text-slate-400">{new Date(u.createdAt).toLocaleDateString()}</td>
+                        <td className="py-2.5 px-4">
+                          <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold border border-amber-300 inline-flex items-center gap-1">
+                            <ShieldAlert className="h-3 w-3" />
+                            Super Admin
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          {/* All Approved Admins Table */}
+          {approvedAdmins.length > 0 && (
+            <div className="bg-white p-5 rounded-xl border border-emerald-200 shadow-sm">
+              <h4 className="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+                <UserCheck className="h-4 w-4 text-emerald-600" />
+                Approved Admins
+                <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold border border-emerald-300">
+                  {approvedAdmins.length}
+                </span>
+              </h4>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs text-slate-600 rounded-lg border border-slate-200 overflow-hidden">
+                  <thead className="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200 uppercase tracking-wider text-[11px]">
+                    <tr>
+                      <th className="py-2.5 px-4">Name</th>
+                      <th className="py-2.5 px-4">Email</th>
+                      <th className="py-2.5 px-4">Date Joined</th>
+                      <th className="py-2.5 px-4">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {approvedAdmins.map((u) => (
+                      <tr key={u.id} className="hover:bg-slate-50/80 transition">
+                        <td className="py-2.5 px-4 font-bold text-slate-900">{u.name}</td>
+                        <td className="py-2.5 px-4 text-slate-600 font-mono text-[11px]">{u.email}</td>
+                        <td className="py-2.5 px-4 text-slate-400">{new Date(u.createdAt).toLocaleDateString()}</td>
+                        <td className="py-2.5 px-4">
+                          <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold border border-emerald-300 inline-flex items-center gap-1">
+                            <CheckCircle2 className="h-3 w-3" />
+                            Approved
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
 
           {pendingAdminUsers.length === 0 ? (
             <div className="p-4 text-center text-xs text-slate-500 bg-white rounded-xl border border-slate-200/80">
