@@ -46,9 +46,11 @@ export const Navbar: React.FC = () => {
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 h-16">
         {/* Brand */}
         <Link href="/admin" className="flex items-center gap-2.5 group">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-600 text-white shadow-md group-hover:bg-sky-700 transition">
-            <ShieldCheck className="h-5 w-5" />
-          </div>
+          <img 
+            src="/testora-logo.jpg" 
+            alt="Testora Logo" 
+            className="h-9 w-9 rounded-lg shadow-sm object-cover border border-slate-200 group-hover:shadow-md transition" 
+          />
           <div>
             <span className="font-bold text-lg text-slate-900 tracking-tight">Testora Admin</span>
             <span className="hidden sm:inline-block ml-2 rounded-full bg-rose-100 px-2 py-0.5 text-[10px] font-semibold text-rose-800">

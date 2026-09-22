@@ -93,9 +93,11 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-3">
-        <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-500/10 text-sky-400 border border-sky-500/20 shadow-lg">
-          <ShieldCheck className="h-8 w-8 text-sky-400" />
-        </div>
+        <img 
+          src="/testora-logo.jpg" 
+          alt="Testora Logo" 
+          className="inline-block h-16 w-16 rounded-2xl shadow-lg border border-slate-700 object-cover" 
+        />
         <h1 className="text-3xl font-extrabold text-white tracking-tight">Testora Admin Portal</h1>
         <p className="text-xs sm:text-sm text-slate-400">
           Super-Admin Verified Assessment & Examination System
