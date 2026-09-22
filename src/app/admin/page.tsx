@@ -17,6 +17,7 @@ import {
   FileDown
 } from 'lucide-react';
 import { fetchServerData, getAssessment, getCandidates, getSessions, saveCandidate, saveSession } from '@/lib/storage';
+import { getAssessmentUrl } from '@/lib/url';
 import { Assessment, Candidate, Session } from '@/types';
 
 export default function AdminDashboardPage() {
@@ -26,7 +27,6 @@ export default function AdminDashboardPage() {
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [copiedLink, setCopiedLink] = useState(false);
-  const [hostIp, setHostIp] = useState<string>('192.168.29.154');
 
   const refreshData = async () => {
     await fetchServerData();
@@ -39,11 +39,6 @@ export default function AdminDashboardPage() {
     refreshData();
 
     if (typeof window !== 'undefined') {
-      const hostname = window.location.hostname;
-      if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
-        setHostIp(hostname);
-      }
-
       window.addEventListener('focus', refreshData);
       window.addEventListener('storage', refreshData);
       const timer = setInterval(refreshData, 2000);
@@ -90,10 +85,8 @@ export default function AdminDashboardPage() {
   const needsReviewSessions = completedSessions.filter((s) => (s.reviewStatus === 'NEEDS_REVIEW' || s.reviewStatus === 'HIGH_RISK_REVIEW') && !s.isBlocked);
 
   const sharableToken = assessment.sharableToken || 'live-test-link';
-  const port = typeof window !== 'undefined' ? window.location.port || '3000' : '3000';
-  const protocol = typeof window !== 'undefined' ? window.location.protocol : 'http:';
-
-  const mainSharableUrl = `${protocol}//${hostIp}:${port}/assessment/${sharableToken}`;
+  const mainSharableUrl = getAssessmentUrl(sharableToken);
+  const openTestUrl = getAssessmentUrl(sharableToken, { isNew: true });
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(mainSharableUrl);
@@ -240,7 +233,7 @@ export default function AdminDashboardPage() {
           </button>
 
           <Link
-            href={`${mainSharableUrl}?new=1`}
+            href={openTestUrl}
             target="_blank"
             className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs shadow-sm transition"
           >

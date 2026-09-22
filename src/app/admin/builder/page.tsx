@@ -22,6 +22,7 @@ import {
   X
 } from 'lucide-react';
 import { getAssessment, saveAssessment } from '@/lib/storage';
+import { getAssessmentUrl } from '@/lib/url';
 import { Assessment, Question, QuestionType } from '@/types';
 
 export default function AssessmentBuilderPage() {
@@ -30,16 +31,9 @@ export default function AssessmentBuilderPage() {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [showDoneModal, setShowDoneModal] = useState(false);
   const [copiedModalLink, setCopiedModalLink] = useState(false);
-  const [hostIp, setHostIp] = useState('192.168.29.154');
 
   useEffect(() => {
     setAssessment(getAssessment());
-    if (typeof window !== 'undefined') {
-      const hostname = window.location.hostname;
-      if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
-        setHostIp(hostname);
-      }
-    }
   }, []);
 
   if (!assessment) return null;
@@ -115,9 +109,8 @@ export default function AssessmentBuilderPage() {
   };
 
   const sharableToken = assessment.sharableToken || 'live-test-link';
-  const port = typeof window !== 'undefined' ? window.location.port || '3000' : '3000';
-  const protocol = typeof window !== 'undefined' ? window.location.protocol : 'http:';
-  const sharableUrl = `${protocol}//${hostIp}:${port}/assessment/${sharableToken}`;
+  const sharableUrl = getAssessmentUrl(sharableToken);
+  const previewTestUrl = getAssessmentUrl(sharableToken, { isNew: true });
 
   const handleCopyModalLink = () => {
     navigator.clipboard.writeText(sharableUrl);
@@ -501,7 +494,7 @@ export default function AssessmentBuilderPage() {
 
             <div className="grid grid-cols-2 gap-3 pt-2">
               <Link
-                href={`${sharableUrl}?new=1`}
+                href={previewTestUrl}
                 target="_blank"
                 className="inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs transition"
               >

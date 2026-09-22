@@ -13,40 +13,51 @@ interface DatabaseSchema {
   sessions: Session[];
 }
 
-function ensureDbFile(): DatabaseSchema {
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
-  }
+let inMemoryDb: DatabaseSchema | null = null;
 
-  if (!fs.existsSync(dbFilePath)) {
-    const initialDb: DatabaseSchema = {
-      assessment: SEED_ASSESSMENT,
-      candidates: SEED_CANDIDATES,
-      sessions: SEED_SESSIONS,
-    };
-    fs.writeFileSync(dbFilePath, JSON.stringify(initialDb, null, 2), 'utf-8');
-    return initialDb;
+function ensureDbFile(): DatabaseSchema {
+  if (inMemoryDb) {
+    return inMemoryDb;
   }
 
   try {
-    const raw = fs.readFileSync(dbFilePath, 'utf-8');
-    return JSON.parse(raw);
+    if (fs.existsSync(dbFilePath)) {
+      const raw = fs.readFileSync(dbFilePath, 'utf-8');
+      inMemoryDb = JSON.parse(raw);
+      return inMemoryDb!;
+    }
   } catch (err) {
-    const initialDb: DatabaseSchema = {
-      assessment: SEED_ASSESSMENT,
-      candidates: SEED_CANDIDATES,
-      sessions: SEED_SESSIONS,
-    };
-    fs.writeFileSync(dbFilePath, JSON.stringify(initialDb, null, 2), 'utf-8');
-    return initialDb;
+    // Read failure fallback
   }
+
+  inMemoryDb = {
+    assessment: SEED_ASSESSMENT,
+    candidates: SEED_CANDIDATES,
+    sessions: SEED_SESSIONS,
+  };
+
+  try {
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+    fs.writeFileSync(dbFilePath, JSON.stringify(inMemoryDb, null, 2), 'utf-8');
+  } catch (err) {
+    // Read-only filesystem fallback on Vercel
+  }
+
+  return inMemoryDb;
 }
 
 function writeDbFile(data: DatabaseSchema): void {
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true });
+  inMemoryDb = data;
+  try {
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+    fs.writeFileSync(dbFilePath, JSON.stringify(data, null, 2), 'utf-8');
+  } catch (err) {
+    // Read-only filesystem fallback on Vercel
   }
-  fs.writeFileSync(dbFilePath, JSON.stringify(data, null, 2), 'utf-8');
 }
 
 export async function GET() {

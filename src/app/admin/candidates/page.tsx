@@ -16,6 +16,7 @@ import {
   RotateCcw
 } from 'lucide-react';
 import { getCandidates, saveCandidate, getSessions } from '@/lib/storage';
+import { getAssessmentUrl } from '@/lib/url';
 import { Candidate } from '@/types';
 
 export default function CandidatesPage() {
@@ -74,8 +75,7 @@ export default function CandidatesPage() {
   };
 
   const copyToClipboard = (token: string) => {
-    const origin = typeof window !== 'undefined' ? window.location.origin : '';
-    const fullUrl = `${origin}/assessment/${token}`;
+    const fullUrl = getAssessmentUrl(token);
     navigator.clipboard.writeText(fullUrl);
     setCopiedToken(token);
     setTimeout(() => setCopiedToken(null), 2500);
