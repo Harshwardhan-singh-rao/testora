@@ -39,6 +39,31 @@ export default function AdminDashboardPage() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [copiedLink, setCopiedLink] = useState(false);
 
+  const [newSuperAdminName, setNewSuperAdminName] = useState('');
+  const [newSuperAdminEmail, setNewSuperAdminEmail] = useState('');
+  const [newSuperAdminPassword, setNewSuperAdminPassword] = useState('');
+  const [createSuperAdminStatus, setCreateSuperAdminStatus] = useState<{ type: 'success' | 'error', msg: string } | null>(null);
+
+  const handleCreateSuperAdmin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreateSuperAdminStatus(null);
+    if (!newSuperAdminName || !newSuperAdminEmail || !newSuperAdminPassword) {
+      setCreateSuperAdminStatus({ type: 'error', msg: 'All fields are required.' });
+      return;
+    }
+    const { createSuperAdmin } = await import('@/lib/auth');
+    const res = createSuperAdmin(newSuperAdminName, newSuperAdminEmail, newSuperAdminPassword);
+    if (res.success) {
+      setCreateSuperAdminStatus({ type: 'success', msg: 'Super Admin created successfully.' });
+      setNewSuperAdminName('');
+      setNewSuperAdminEmail('');
+      setNewSuperAdminPassword('');
+      refreshData();
+    } else {
+      setCreateSuperAdminStatus({ type: 'error', msg: res.error || 'Failed to create.' });
+    }
+  };
+
   const refreshData = async () => {
     await fetchServerData();
 
@@ -249,33 +274,6 @@ export default function AdminDashboardPage() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
-
-  const [newSuperAdminName, setNewSuperAdminName] = useState('');
-  const [newSuperAdminEmail, setNewSuperAdminEmail] = useState('');
-  const [newSuperAdminPassword, setNewSuperAdminPassword] = useState('');
-  const [createSuperAdminStatus, setCreateSuperAdminStatus] = useState<{ type: 'success' | 'error', msg: string } | null>(null);
-
-  const handleCreateSuperAdmin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setCreateSuperAdminStatus(null);
-    if (!newSuperAdminName || !newSuperAdminEmail || !newSuperAdminPassword) {
-      setCreateSuperAdminStatus({ type: 'error', msg: 'All fields are required.' });
-      return;
-    }
-    const { createSuperAdmin } = await import('@/lib/auth');
-    const res = createSuperAdmin(newSuperAdminName, newSuperAdminEmail, newSuperAdminPassword);
-    if (res.success) {
-      setCreateSuperAdminStatus({ type: 'success', msg: 'Super Admin created successfully.' });
-      setNewSuperAdminName('');
-      setNewSuperAdminEmail('');
-      setNewSuperAdminPassword('');
-      refreshData();
-    } else {
-      setCreateSuperAdminStatus({ type: 'error', msg: res.error || 'Failed to create.' });
-    }
-  };
-
   const pendingAdminUsers = adminUsers.filter((u) => u.status === 'PENDING_APPROVAL' && u.role !== 'SUPER_ADMIN');
 
   return (
