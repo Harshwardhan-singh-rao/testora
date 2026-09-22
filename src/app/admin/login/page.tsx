@@ -10,7 +10,7 @@ import { AdminUser } from '@/types';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [tab, setTab] = useState<'LOGIN' | 'SIGNUP'>('LOGIN');
+  const [tab, setTab] = useState<'LOGIN' | 'SUPER_ADMIN' | 'SIGNUP'>('LOGIN');
   const [currentAdmin, setCurrentAdminState] = useState<AdminUser | null>(null);
 
   // Form states
@@ -25,6 +25,8 @@ export default function AdminLoginPage() {
       const params = new URLSearchParams(window.location.search);
       if (params.get('mode') === 'register' || params.get('tab') === 'signup') {
         setTab('SIGNUP');
+      } else if (params.get('mode') === 'superadmin' || params.get('role') === 'superadmin') {
+        setTab('SUPER_ADMIN');
       }
     }
 
@@ -138,28 +140,40 @@ export default function AdminLoginPage() {
           ) : (
             <>
               {/* TAB SWITCHER */}
-              <div className="grid grid-cols-2 p-1 rounded-xl bg-slate-900 text-xs font-bold">
+              <div className="grid grid-cols-3 gap-1 p-1 rounded-xl bg-slate-900 text-xs font-bold">
                 <button
                   onClick={() => {
                     setTab('LOGIN');
                     setErrorMsg(null);
                   }}
-                  className={`py-2.5 rounded-lg transition ${
+                  className={`py-2 rounded-lg transition text-[11px] ${
                     tab === 'LOGIN' ? 'bg-sky-600 text-white shadow' : 'text-slate-400 hover:text-white'
                   }`}
                 >
-                  Sign In
+                  Admin Login
+                </button>
+                <button
+                  onClick={() => {
+                    setTab('SUPER_ADMIN');
+                    setErrorMsg(null);
+                  }}
+                  className={`py-2 rounded-lg transition text-[11px] flex items-center justify-center gap-1 ${
+                    tab === 'SUPER_ADMIN' ? 'bg-amber-600 text-white shadow' : 'text-amber-400/80 hover:text-amber-300'
+                  }`}
+                >
+                  <ShieldCheck className="h-3 w-3" />
+                  Super Admin
                 </button>
                 <button
                   onClick={() => {
                     setTab('SIGNUP');
                     setErrorMsg(null);
                   }}
-                  className={`py-2.5 rounded-lg transition ${
-                    tab === 'SIGNUP' ? 'bg-sky-600 text-white shadow' : 'text-slate-400 hover:text-white'
+                  className={`py-2 rounded-lg transition text-[11px] ${
+                    tab === 'SIGNUP' ? 'bg-emerald-600 text-white shadow' : 'text-slate-400 hover:text-white'
                   }`}
                 >
-                  Request Admin Sign Up
+                  Sign Up
                 </button>
               </div>
 
@@ -178,7 +192,7 @@ export default function AdminLoginPage() {
                 </div>
               )}
 
-              {/* LOGIN FORM */}
+              {/* ADMIN LOGIN FORM */}
               {tab === 'LOGIN' && (
                 <form onSubmit={handleLogin} className="space-y-4 text-xs">
                   <div className="space-y-1">
@@ -189,7 +203,7 @@ export default function AdminLoginPage() {
                     <input
                       type="email"
                       required
-                      placeholder="e.g. admin@testora.com"
+                      placeholder="e.g. admin@institution.edu"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white focus:ring-2 focus:ring-sky-500 outline-none"
@@ -216,6 +230,54 @@ export default function AdminLoginPage() {
                     className="w-full py-3.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-sm shadow-lg transition flex items-center justify-center gap-2"
                   >
                     Log In to Admin Portal
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                </form>
+              )}
+
+              {/* SUPER ADMIN LOGIN FORM */}
+              {tab === 'SUPER_ADMIN' && (
+                <form onSubmit={handleLogin} className="space-y-4 text-xs">
+                  <div className="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-center gap-2">
+                    <ShieldCheck className="h-4 w-4 text-amber-400 shrink-0" />
+                    <span>Super Admin Master Access & Verification Portal</span>
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="font-semibold text-slate-300 flex items-center gap-1.5">
+                      <Mail className="h-3.5 w-3.5 text-amber-400" />
+                      Super Admin Email
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="harshrao8058@gmail.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-amber-500/40 text-white focus:ring-2 focus:ring-amber-500 outline-none"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="font-semibold text-slate-300 flex items-center gap-1.5">
+                      <Lock className="h-3.5 w-3.5 text-amber-400" />
+                      Super Admin Password
+                    </label>
+                    <input
+                      type="password"
+                      required
+                      placeholder="Enter super admin password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-amber-500/40 text-white focus:ring-2 focus:ring-amber-500 outline-none"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-3.5 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-bold text-sm shadow-lg transition flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    Log In as Super Admin
                     <ArrowRight className="h-4 w-4" />
                   </button>
                 </form>
