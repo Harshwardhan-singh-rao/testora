@@ -21,6 +21,13 @@ export default function AdminLoginPage() {
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('mode') === 'register' || params.get('tab') === 'signup') {
+        setTab('SIGNUP');
+      }
+    }
+
     fetchServerData().then(() => {
       const active = getCurrentAdmin();
       if (active) {
