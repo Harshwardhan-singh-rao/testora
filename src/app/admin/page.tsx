@@ -274,8 +274,9 @@ export default function AdminDashboardPage() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  const pendingAdminUsers = adminUsers.filter((u) => u.status === 'PENDING_APPROVAL' && u.role !== 'SUPER_ADMIN');
+  };
 
+  const pendingAdminUsers = adminUsers.filter((u) => u.status === 'PENDING_APPROVAL' && u.role !== 'SUPER_ADMIN');
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Top Clean Header */}
