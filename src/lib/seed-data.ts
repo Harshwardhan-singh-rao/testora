@@ -1,7 +1,19 @@
-import { Assessment, Candidate, Session } from '@/types';
+import { AdminUser, Assessment, Candidate, Session } from '@/types';
 
 // Default link expiration set to 24 hours from now
 const defaultLinkExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+
+export const SEED_ADMIN_USERS: AdminUser[] = [
+  {
+    id: 'admin-super-01',
+    name: 'Super Admin',
+    email: 'admin@testora.com',
+    password: 'admin',
+    role: 'SUPER_ADMIN',
+    status: 'APPROVED',
+    createdAt: '2026-09-20T10:00:00Z',
+  },
+];
 
 export const SEED_ASSESSMENT: Assessment = {
   id: 'asmnt-tech-club-2026',

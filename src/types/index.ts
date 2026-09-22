@@ -110,3 +110,13 @@ export interface Session {
   isBlocked?: boolean;
   blockedReason?: string;
 }
+
+export interface AdminUser {
+  id: string;
+  name: string;
+  email: string;
+  password?: string;
+  role: 'SUPER_ADMIN' | 'ADMIN';
+  status: 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED';
+  createdAt: string;
+}

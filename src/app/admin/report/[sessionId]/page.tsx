@@ -19,10 +19,13 @@ import {
   Download,
   FileDown
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { fetchServerData, getAssessment, getCandidates, getSessionById, saveSession } from '@/lib/storage';
+import { getCurrentAdmin } from '@/lib/auth';
 import { Assessment, Candidate, Session } from '@/types';
 
 export default function SessionReportPage({ params }: { params: Promise<{ sessionId: string }> }) {
+  const router = useRouter();
   const resolvedParams = use(params);
   const [session, setSession] = useState<Session | null>(null);
   const [candidate, setCandidate] = useState<Candidate | null>(null);
@@ -32,6 +35,12 @@ export default function SessionReportPage({ params }: { params: Promise<{ sessio
 
   useEffect(() => {
     const loadReportData = async () => {
+      const active = getCurrentAdmin();
+      if (!active || (active.status === 'PENDING_APPROVAL' && active.role !== 'SUPER_ADMIN')) {
+        router.push('/admin/login');
+        return;
+      }
+
       await fetchServerData();
       const s = getSessionById(resolvedParams.sessionId);
       if (s) {

@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
-import { Assessment, Candidate, Session } from '@/types';
-import { SEED_ASSESSMENT, SEED_CANDIDATES, SEED_SESSIONS } from '@/lib/seed-data';
+import { AdminUser, Assessment, Candidate, Session } from '@/types';
+import { SEED_ADMIN_USERS, SEED_ASSESSMENT, SEED_CANDIDATES, SEED_SESSIONS } from '@/lib/seed-data';
 
 const dataDir = path.join(process.cwd(), 'data');
 const dbFilePath = path.join(dataDir, 'db.json');
@@ -11,12 +11,14 @@ interface DatabaseSchema {
   assessment: Assessment;
   candidates: Candidate[];
   sessions: Session[];
+  adminUsers: AdminUser[];
 }
 
 let inMemoryDb: DatabaseSchema | null = null;
 
 function ensureDbFile(): DatabaseSchema {
   if (inMemoryDb) {
+    if (!inMemoryDb.adminUsers) inMemoryDb.adminUsers = SEED_ADMIN_USERS;
     return inMemoryDb;
   }
 
@@ -24,6 +26,7 @@ function ensureDbFile(): DatabaseSchema {
     if (fs.existsSync(dbFilePath)) {
       const raw = fs.readFileSync(dbFilePath, 'utf-8');
       inMemoryDb = JSON.parse(raw);
+      if (!inMemoryDb!.adminUsers) inMemoryDb!.adminUsers = SEED_ADMIN_USERS;
       return inMemoryDb!;
     }
   } catch (err) {
@@ -34,6 +37,7 @@ function ensureDbFile(): DatabaseSchema {
     assessment: SEED_ASSESSMENT,
     candidates: SEED_CANDIDATES,
     sessions: SEED_SESSIONS,
+    adminUsers: SEED_ADMIN_USERS,
   };
 
   try {
@@ -69,7 +73,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const db = ensureDbFile();
-    const { action, candidate, session, assessment } = body;
+    const { action, candidate, session, assessment, adminUser, adminUserId, status } = body;
 
     if (action === 'saveCandidate' && candidate) {
       const idx = db.candidates.findIndex((c) => c.id === candidate.id);
@@ -87,6 +91,18 @@ export async function POST(request: Request) {
       }
     } else if (action === 'saveAssessment' && assessment) {
       db.assessment = assessment;
+    } else if (action === 'saveAdminUser' && adminUser) {
+      const idx = db.adminUsers.findIndex((u) => u.id === adminUser.id || u.email.toLowerCase() === adminUser.email.toLowerCase());
+      if (idx >= 0) {
+        db.adminUsers[idx] = adminUser;
+      } else {
+        db.adminUsers.push(adminUser);
+      }
+    } else if (action === 'updateAdminStatus' && adminUserId && status) {
+      const idx = db.adminUsers.findIndex((u) => u.id === adminUserId);
+      if (idx >= 0) {
+        db.adminUsers[idx].status = status;
+      }
     } else if (action === 'unblockCandidate' && session) {
       const idx = db.sessions.findIndex((s) => s.id === session.id);
       if (idx >= 0) {
@@ -101,6 +117,7 @@ export async function POST(request: Request) {
       db.assessment = SEED_ASSESSMENT;
       db.candidates = SEED_CANDIDATES;
       db.sessions = SEED_SESSIONS;
+      db.adminUsers = SEED_ADMIN_USERS;
     }
 
     writeDbFile(db);

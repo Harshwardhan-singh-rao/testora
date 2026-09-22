@@ -1,19 +1,33 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { ShieldCheck, LayoutDashboard, FilePlus, RotateCcw, Menu, X } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { ShieldCheck, LayoutDashboard, FilePlus, RotateCcw, Menu, X, LogOut, UserCheck } from 'lucide-react';
 import { resetToSeedData } from '@/lib/storage';
+import { getCurrentAdmin, logoutAdmin } from '@/lib/auth';
+import { AdminUser } from '@/types';
 
 export const Navbar: React.FC = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [currentAdmin, setCurrentAdmin] = useState<AdminUser | null>(null);
 
-  // Hide top navigation completely when taking assessment
-  if (pathname.startsWith('/assessment')) {
+  useEffect(() => {
+    setCurrentAdmin(getCurrentAdmin());
+  }, [pathname]);
+
+  // Hide top navigation completely when taking assessment or on login page
+  if (pathname.startsWith('/assessment') || pathname === '/admin/login') {
     return null;
   }
+
+  const handleLogout = () => {
+    logoutAdmin();
+    setCurrentAdmin(null);
+    router.push('/admin/login');
+  };
 
   const handleResetData = () => {
     if (confirm('Reset all assessments, questions, candidates, and blocked sessions to default initial state?')) {
@@ -65,15 +79,26 @@ export const Navbar: React.FC = () => {
           })}
         </nav>
 
-        {/* Actions */}
-        <div className="hidden md:flex items-center gap-2">
+        {/* Actions & Admin User Info */}
+        <div className="hidden md:flex items-center gap-3">
+          {currentAdmin && (
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 text-xs text-slate-700 font-medium">
+              <span className="font-bold text-slate-900">{currentAdmin.name}</span>
+              <span className={`px-2 py-0.5 rounded-md text-[10px] font-extrabold ${
+                currentAdmin.role === 'SUPER_ADMIN' ? 'bg-amber-100 text-amber-800 border border-amber-300' : 'bg-sky-100 text-sky-800'
+              }`}>
+                {currentAdmin.role === 'SUPER_ADMIN' ? 'SUPER ADMIN' : 'ADMIN'}
+              </span>
+            </div>
+          )}
+
           <button
-            onClick={handleResetData}
-            title="Reset storage to initial seed data"
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg text-slate-600 hover:text-slate-900 border border-slate-200 hover:bg-slate-50 transition"
+            onClick={handleLogout}
+            title="Sign Out of Admin Portal"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-rose-700 hover:bg-rose-50 border border-rose-200 transition"
           >
-            <RotateCcw className="h-3.5 w-3.5" />
-            Reset Data
+            <LogOut className="h-3.5 w-3.5" />
+            Sign Out
           </button>
         </div>
 

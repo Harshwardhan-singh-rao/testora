@@ -15,11 +15,14 @@ import {
   Unlock,
   RotateCcw
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { getCandidates, saveCandidate, getSessions } from '@/lib/storage';
 import { getAssessmentUrl } from '@/lib/url';
+import { getCurrentAdmin } from '@/lib/auth';
 import { Candidate } from '@/types';
 
 export default function CandidatesPage() {
+  const router = useRouter();
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [newName, setNewName] = useState('');
   const [newEmail, setNewEmail] = useState('');
@@ -27,8 +30,13 @@ export default function CandidatesPage() {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
+    const active = getCurrentAdmin();
+    if (!active || (active.status === 'PENDING_APPROVAL' && active.role !== 'SUPER_ADMIN')) {
+      router.push('/admin/login');
+      return;
+    }
     setCandidates(getCandidates());
-  }, []);
+  }, [router]);
 
   const clearLocalBlockCacheForEmail = (email: string) => {
     if (typeof window === 'undefined') return;

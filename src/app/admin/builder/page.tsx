@@ -21,6 +21,7 @@ import {
   LayoutDashboard,
   X
 } from 'lucide-react';
+import { getCurrentAdmin } from '@/lib/auth';
 import { getAssessment, saveAssessment } from '@/lib/storage';
 import { getAssessmentUrl } from '@/lib/url';
 import { Assessment, Question, QuestionType } from '@/types';
@@ -33,8 +34,13 @@ export default function AssessmentBuilderPage() {
   const [copiedModalLink, setCopiedModalLink] = useState(false);
 
   useEffect(() => {
+    const active = getCurrentAdmin();
+    if (!active || (active.status === 'PENDING_APPROVAL' && active.role !== 'SUPER_ADMIN')) {
+      router.push('/admin/login');
+      return;
+    }
     setAssessment(getAssessment());
-  }, []);
+  }, [router]);
 
   if (!assessment) return null;
 

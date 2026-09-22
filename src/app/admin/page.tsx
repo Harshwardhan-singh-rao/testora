@@ -1,7 +1,6 @@
-'use client';
-
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   FileText,
   AlertTriangle,
@@ -14,22 +13,46 @@ import {
   Plus,
   ExternalLink,
   Unlock,
-  FileDown
+  FileDown,
+  UserCheck,
+  CheckCircle2,
+  XCircle,
+  Clock,
+  LogOut,
+  User
 } from 'lucide-react';
 import { fetchServerData, getAssessment, getCandidates, getSessions, saveCandidate, saveSession } from '@/lib/storage';
 import { getAssessmentUrl } from '@/lib/url';
-import { Assessment, Candidate, Session } from '@/types';
+import { getCurrentAdmin, getAdminUsers, updateAdminStatus, logoutAdmin } from '@/lib/auth';
+import { AdminUser, Assessment, Candidate, Session } from '@/types';
 
 export default function AdminDashboardPage() {
+  const router = useRouter();
   const [assessment, setAssessment] = useState<Assessment | null>(null);
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [adminUsers, setAdminUsersState] = useState<AdminUser[]>([]);
+  const [currentAdmin, setCurrentAdminState] = useState<AdminUser | null>(null);
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [copiedLink, setCopiedLink] = useState(false);
 
   const refreshData = async () => {
     await fetchServerData();
+
+    const active = getCurrentAdmin();
+    if (!active) {
+      router.push('/admin/login');
+      return;
+    }
+
+    if (active.status === 'PENDING_APPROVAL' && active.role !== 'SUPER_ADMIN') {
+      router.push('/admin/login');
+      return;
+    }
+
+    setCurrentAdminState(active);
+    setAdminUsersState(getAdminUsers());
     setAssessment(getAssessment());
     setCandidates(getCandidates());
     setSessions(getSessions());
@@ -212,6 +235,8 @@ export default function AdminDashboardPage() {
     document.body.removeChild(link);
   };
 
+  const pendingAdminUsers = adminUsers.filter((u) => u.status === 'PENDING_APPROVAL' && u.role !== 'SUPER_ADMIN');
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Top Clean Header */}
@@ -249,6 +274,86 @@ export default function AdminDashboardPage() {
           </Link>
         </div>
       </div>
+
+      {/* SUPER ADMIN VERIFICATION PANEL (Visible to Super Admin) */}
+      {currentAdmin?.role === 'SUPER_ADMIN' && (
+        <div className="bg-white rounded-2xl border border-amber-200 p-6 shadow-sm space-y-4 bg-gradient-to-r from-amber-50/50 to-orange-50/30">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-amber-200/60 pb-3">
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-xl bg-amber-500/10 text-amber-700 flex items-center justify-center font-bold">
+                <UserCheck className="h-4 w-4" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+                  Admin Sign-Up Verifications
+                  <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-extrabold border border-amber-300">
+                    {pendingAdminUsers.length} Pending
+                  </span>
+                </h3>
+                <p className="text-xs text-slate-500">Super Admin Approval Portal: Verify and grant admin access to new sign-ups.</p>
+              </div>
+            </div>
+          </div>
+
+          {pendingAdminUsers.length === 0 ? (
+            <div className="p-4 text-center text-xs text-slate-500 bg-white rounded-xl border border-slate-200/80">
+              <CheckCircle2 className="h-4 w-4 text-emerald-500 inline mr-1.5" />
+              No pending admin sign-up requests. All admin accounts verified.
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs text-slate-600 bg-white rounded-xl border border-slate-200 overflow-hidden">
+                <thead className="bg-slate-50 text-slate-700 font-semibold border-b border-slate-200 uppercase tracking-wider text-[11px]">
+                  <tr>
+                    <th className="py-3 px-4">Applicant Name</th>
+                    <th className="py-3 px-4">Email Address</th>
+                    <th className="py-3 px-4">Request Date</th>
+                    <th className="py-3 px-4">Verification Status</th>
+                    <th className="py-3 px-4 text-right">Super Admin Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {pendingAdminUsers.map((u) => (
+                    <tr key={u.id} className="hover:bg-slate-50/80 transition">
+                      <td className="py-3 px-4 font-bold text-slate-900">{u.name}</td>
+                      <td className="py-3 px-4 text-slate-600 font-mono text-[11px]">{u.email}</td>
+                      <td className="py-3 px-4 text-slate-400">{new Date(u.createdAt).toLocaleDateString()}</td>
+                      <td className="py-3 px-4">
+                        <span className="px-2.5 py-1 rounded-full bg-amber-100 text-amber-800 text-[11px] font-bold inline-flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          Awaiting Approval
+                        </span>
+                      </td>
+                      <td className="py-3 px-4 text-right space-x-2">
+                        <button
+                          onClick={() => {
+                            updateAdminStatus(u.id, 'APPROVED');
+                            refreshData();
+                          }}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-sm"
+                        >
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                          Approve Admin
+                        </button>
+                        <button
+                          onClick={() => {
+                            updateAdminStatus(u.id, 'REJECTED');
+                            refreshData();
+                          }}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs transition shadow-sm"
+                        >
+                          <XCircle className="h-3.5 w-3.5" />
+                          Reject
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Metrics Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
