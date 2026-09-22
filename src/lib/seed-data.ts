@@ -6,9 +6,9 @@ const defaultLinkExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString
 export const SEED_ADMIN_USERS: AdminUser[] = [
   {
     id: 'admin-super-01',
-    name: 'Super Admin',
-    email: 'admin@testora.com',
-    password: 'admin',
+    name: 'Harsh Rao',
+    email: 'harshrao8058@gmail.com',
+    password: 'hs8847rao',
     role: 'SUPER_ADMIN',
     status: 'APPROVED',
     createdAt: '2026-09-20T10:00:00Z',

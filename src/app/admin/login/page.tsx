@@ -80,12 +80,6 @@ export default function AdminLoginPage() {
     }
   };
 
-  const fillSuperAdminPreset = () => {
-    setEmail('admin@testora.com');
-    setPassword('admin');
-    setTab('LOGIN');
-  };
-
   const handleLogout = () => {
     logoutAdmin();
     setCurrentAdminState(null);
@@ -224,17 +218,6 @@ export default function AdminLoginPage() {
                     Log In to Admin Portal
                     <ArrowRight className="h-4 w-4" />
                   </button>
-
-                  <div className="pt-2 border-t border-slate-700/60 flex items-center justify-between text-[11px]">
-                    <span className="text-slate-400">Default Master Admin?</span>
-                    <button
-                      type="button"
-                      onClick={fillSuperAdminPreset}
-                      className="text-sky-400 hover:text-sky-300 font-bold underline cursor-pointer"
-                    >
-                      Fill Super Admin Credentials
-                    </button>
-                  </div>
                 </form>
               )}
 

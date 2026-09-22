@@ -420,5 +420,16 @@
       "blockedReason": "Switched browser tab or minimized window",
       "finalDecision": "BLOCKED"
     }
+  ],
+  "adminUsers": [
+    {
+      "id": "admin-super-01",
+      "name": "Harsh Rao",
+      "email": "harshrao8058@gmail.com",
+      "password": "hs8847rao",
+      "role": "SUPER_ADMIN",
+      "status": "APPROVED",
+      "createdAt": "2026-09-20T10:00:00Z"
+    }
   ]
 }
