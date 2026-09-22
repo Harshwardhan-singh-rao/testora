@@ -82,14 +82,18 @@ export const Navbar: React.FC = () => {
         {/* Actions & Admin User Info */}
         <div className="hidden md:flex items-center gap-3">
           {currentAdmin && (
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 text-xs text-slate-700 font-medium">
+            <Link 
+              href="/admin/profile"
+              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 transition text-xs text-slate-700 font-medium"
+              title="View My Profile"
+            >
               <span className="font-bold text-slate-900">{currentAdmin.name}</span>
               <span className={`px-2 py-0.5 rounded-md text-[10px] font-extrabold ${
-                currentAdmin.role === 'SUPER_ADMIN' ? 'bg-amber-100 text-amber-800 border border-amber-300' : 'bg-sky-100 text-sky-800'
+                currentAdmin.role === 'SUPER_ADMIN' ? 'bg-amber-100 text-amber-800 border border-amber-300' : 'bg-sky-100 text-sky-800 border border-sky-300'
               }`}>
                 {currentAdmin.role === 'SUPER_ADMIN' ? 'SUPER ADMIN' : 'ADMIN'}
               </span>
-            </div>
+            </Link>
           )}
 
           <button
@@ -133,7 +137,15 @@ export const Navbar: React.FC = () => {
               </Link>
             );
           })}
-          <div className="pt-2 border-t border-slate-100">
+          <div className="pt-2 border-t border-slate-100 space-y-1">
+            <Link
+              href="/admin/profile"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-100"
+            >
+              <UserCheck className="h-5 w-5" />
+              My Profile
+            </Link>
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
