@@ -108,6 +108,33 @@ export const signUpAdmin = (
   return { success: true, user: newAdmin };
 };
 
+export const createSuperAdmin = (
+  nameStr: string,
+  emailStr: string,
+  passStr: string
+): { success: boolean; error?: string } => {
+  const users = getAdminUsers();
+  const normEmail = emailStr.trim().toLowerCase();
+  const existing = users.find((u) => u.email && u.email.toLowerCase() === normEmail);
+
+  if (existing) {
+    return { success: false, error: 'An account with this email already exists.' };
+  }
+
+  const newSuperAdmin: AdminUser = {
+    id: `admin-super-${Date.now()}`,
+    name: nameStr.trim(),
+    email: normEmail,
+    password: passStr,
+    role: 'SUPER_ADMIN',
+    status: 'APPROVED',
+    createdAt: new Date().toISOString(),
+  };
+
+  saveAdminUser(newSuperAdmin);
+  return { success: true };
+};
+
 export const updateAdminStatus = (
   adminUserId: string,
   newStatus: 'APPROVED' | 'REJECTED'

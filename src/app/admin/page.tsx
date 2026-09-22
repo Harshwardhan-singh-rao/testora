@@ -251,6 +251,31 @@ export default function AdminDashboardPage() {
     document.body.removeChild(link);
   };
 
+  const [newSuperAdminName, setNewSuperAdminName] = useState('');
+  const [newSuperAdminEmail, setNewSuperAdminEmail] = useState('');
+  const [newSuperAdminPassword, setNewSuperAdminPassword] = useState('');
+  const [createSuperAdminStatus, setCreateSuperAdminStatus] = useState<{ type: 'success' | 'error', msg: string } | null>(null);
+
+  const handleCreateSuperAdmin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setCreateSuperAdminStatus(null);
+    if (!newSuperAdminName || !newSuperAdminEmail || !newSuperAdminPassword) {
+      setCreateSuperAdminStatus({ type: 'error', msg: 'All fields are required.' });
+      return;
+    }
+    const { createSuperAdmin } = await import('@/lib/auth');
+    const res = createSuperAdmin(newSuperAdminName, newSuperAdminEmail, newSuperAdminPassword);
+    if (res.success) {
+      setCreateSuperAdminStatus({ type: 'success', msg: 'Super Admin created successfully.' });
+      setNewSuperAdminName('');
+      setNewSuperAdminEmail('');
+      setNewSuperAdminPassword('');
+      refreshData();
+    } else {
+      setCreateSuperAdminStatus({ type: 'error', msg: res.error || 'Failed to create.' });
+    }
+  };
+
   const pendingAdminUsers = adminUsers.filter((u) => u.status === 'PENDING_APPROVAL' && u.role !== 'SUPER_ADMIN');
 
   return (
@@ -309,6 +334,36 @@ export default function AdminDashboardPage() {
                 <p className="text-xs text-slate-500">Super Admin Approval Portal: Verify and grant admin access to new sign-ups.</p>
               </div>
             </div>
+          </div>
+
+          {/* Create Super Admin Form */}
+          <div className="bg-white p-5 rounded-xl border border-amber-200 shadow-sm">
+            <h4 className="text-sm font-bold text-slate-800 mb-3 flex items-center gap-2">
+              <ShieldCheck className="h-4 w-4 text-emerald-600" />
+              Add New Super Admin
+            </h4>
+            <form onSubmit={handleCreateSuperAdmin} className="flex flex-col sm:flex-row items-end gap-3">
+              <div className="flex-1 w-full space-y-1">
+                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Name</label>
+                <input type="text" value={newSuperAdminName} onChange={e => setNewSuperAdminName(e.target.value)} placeholder="e.g. Jane Doe" className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-amber-500 outline-none" />
+              </div>
+              <div className="flex-1 w-full space-y-1">
+                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Email</label>
+                <input type="email" value={newSuperAdminEmail} onChange={e => setNewSuperAdminEmail(e.target.value)} placeholder="admin@domain.com" className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-amber-500 outline-none" />
+              </div>
+              <div className="flex-1 w-full space-y-1">
+                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Password</label>
+                <input type="text" value={newSuperAdminPassword} onChange={e => setNewSuperAdminPassword(e.target.value)} placeholder="Secure password" className="w-full px-3 py-2 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-amber-500 outline-none" />
+              </div>
+              <button type="submit" className="w-full sm:w-auto px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold rounded-lg transition whitespace-nowrap h-[34px] shadow-sm">
+                Create Account
+              </button>
+            </form>
+            {createSuperAdminStatus && (
+              <div className={`mt-3 p-2 rounded-lg text-xs font-semibold ${createSuperAdminStatus.type === 'success' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'}`}>
+                {createSuperAdminStatus.msg}
+              </div>
+            )}
           </div>
 
           {pendingAdminUsers.length === 0 ? (

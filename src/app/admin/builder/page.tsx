@@ -197,7 +197,6 @@ export default function AssessmentBuilderPage() {
               <input
                 type="number"
                 min={1}
-                max={180}
                 value={assessment.durationMinutes}
                 onChange={(e) => handleAssessmentMetaChange('durationMinutes', Math.max(1, Number(e.target.value)))}
                 className="w-20 px-3 py-1 rounded-lg border border-sky-300 text-base font-bold text-sky-900 focus:ring-2 focus:ring-sky-500 outline-none bg-white text-center"
@@ -224,26 +223,40 @@ export default function AssessmentBuilderPage() {
           </div>
 
           {/* Sharable Link Expiration Timer */}
-          <div className="space-y-2 bg-purple-50/80 p-4 rounded-xl border border-purple-200">
+          <div className="space-y-2 bg-purple-50/80 p-4 rounded-xl border border-purple-200 flex flex-col justify-between">
             <label className="text-xs font-bold text-purple-900 flex items-center gap-1.5">
               <Calendar className="h-4 w-4 text-purple-600" />
-              Sharable Link Expiration Validity
+              Sharable Link Expiration Date
             </label>
-            <div className="text-xs text-purple-800 font-medium">
-              Expires: <span className="font-bold text-purple-950">{new Date(assessment.linkExpiresAt || Date.now()).toLocaleString()}</span>
-            </div>
-            <div className="flex items-center gap-1 text-[11px] font-semibold text-purple-700 pt-1">
-              <span className="text-[10px] text-slate-500">Set Validity:</span>
-              {[1, 6, 12, 24, 48].map((h) => (
-                <button
-                  key={h}
-                  type="button"
-                  onClick={() => setLinkExpiryHours(h)}
-                  className="px-2 py-0.5 rounded bg-white text-slate-700 border border-slate-300 hover:bg-purple-100 hover:border-purple-300 transition font-bold"
-                >
-                  +{h}h
-                </button>
-              ))}
+            <div className="flex flex-col gap-2">
+              <input
+                type="datetime-local"
+                value={
+                  assessment.linkExpiresAt 
+                    ? new Date(new Date(assessment.linkExpiresAt).getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16) 
+                    : ''
+                }
+                onChange={(e) => {
+                  if (e.target.value) {
+                    const localDate = new Date(e.target.value);
+                    handleAssessmentMetaChange('linkExpiresAt', localDate.toISOString());
+                  }
+                }}
+                className="w-full px-3 py-1.5 rounded-lg border border-purple-300 text-sm font-semibold text-purple-900 focus:ring-2 focus:ring-purple-500 outline-none bg-white"
+              />
+              <div className="flex items-center gap-1 text-[11px] font-semibold text-purple-700">
+                <span className="text-[10px] text-slate-500">Add hours:</span>
+                {[1, 6, 12, 24, 48].map((h) => (
+                  <button
+                    key={h}
+                    type="button"
+                    onClick={() => setLinkExpiryHours(h)}
+                    className="px-2 py-0.5 rounded bg-white text-slate-700 border border-slate-300 hover:bg-purple-100 hover:border-purple-300 transition font-bold"
+                  >
+                    +{h}h
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
