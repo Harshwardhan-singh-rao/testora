@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { ShieldCheck, LayoutDashboard, FilePlus, RotateCcw, Menu, X, LogOut, UserCheck } from 'lucide-react';
+import { ShieldCheck, LayoutDashboard, FilePlus, RotateCcw, Menu, X, LogOut, UserCheck, Users } from 'lucide-react';
 import { resetToSeedData } from '@/lib/storage';
 import { getCurrentAdmin, logoutAdmin } from '@/lib/auth';
 import { AdminUser } from '@/types';
@@ -39,6 +39,7 @@ export const Navbar: React.FC = () => {
   const navLinks = [
     { href: '/admin', label: 'Admin Dashboard', icon: LayoutDashboard },
     { href: '/admin/builder', label: 'Question Builder', icon: FilePlus },
+    ...(currentAdmin?.role === 'SUPER_ADMIN' ? [{ href: '/admin/manage', label: 'Manage Admins', icon: Users }] : []),
   ];
 
   return (
