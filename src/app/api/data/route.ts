@@ -9,6 +9,7 @@ const dbFilePath = path.join(dataDir, 'db.json');
 
 interface DatabaseSchema {
   assessment: Assessment;
+  assessments?: Assessment[];
   candidates: Candidate[];
   sessions: Session[];
   adminUsers: AdminUser[];
@@ -19,6 +20,7 @@ let inMemoryDb: DatabaseSchema | null = null;
 function ensureDbFile(): DatabaseSchema {
   if (inMemoryDb) {
     if (!inMemoryDb.adminUsers) inMemoryDb.adminUsers = SEED_ADMIN_USERS;
+    if (!inMemoryDb.assessments) inMemoryDb.assessments = [SEED_ASSESSMENT];
     return inMemoryDb;
   }
 
@@ -27,6 +29,7 @@ function ensureDbFile(): DatabaseSchema {
       const raw = fs.readFileSync(dbFilePath, 'utf-8');
       inMemoryDb = JSON.parse(raw);
       if (!inMemoryDb!.adminUsers) inMemoryDb!.adminUsers = SEED_ADMIN_USERS;
+      if (!inMemoryDb!.assessments) inMemoryDb!.assessments = [inMemoryDb!.assessment || SEED_ASSESSMENT];
       return inMemoryDb!;
     }
   } catch (err) {
@@ -35,6 +38,7 @@ function ensureDbFile(): DatabaseSchema {
 
   inMemoryDb = {
     assessment: SEED_ASSESSMENT,
+    assessments: [SEED_ASSESSMENT],
     candidates: SEED_CANDIDATES,
     sessions: SEED_SESSIONS,
     adminUsers: SEED_ADMIN_USERS,
@@ -91,6 +95,14 @@ export async function POST(request: Request) {
       }
     } else if (action === 'saveAssessment' && assessment) {
       db.assessment = assessment;
+      if (!db.assessments) db.assessments = [];
+      const adminEmail = assessment.adminEmail || 'admin@testora.com';
+      const idx = db.assessments.findIndex((a) => (a.adminEmail && a.adminEmail.toLowerCase() === adminEmail.toLowerCase()) || a.id === assessment.id);
+      if (idx >= 0) {
+        db.assessments[idx] = assessment;
+      } else {
+        db.assessments.push(assessment);
+      }
     } else if (action === 'saveAdminUser' && adminUser) {
       const idx = db.adminUsers.findIndex((u) => u.id === adminUser.id || u.email.toLowerCase() === adminUser.email.toLowerCase());
       if (idx >= 0) {

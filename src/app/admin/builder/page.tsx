@@ -35,11 +35,13 @@ export default function AssessmentBuilderPage() {
 
   useEffect(() => {
     const active = getCurrentAdmin();
-    if (!active || (active.status === 'PENDING_APPROVAL' && active.role !== 'SUPER_ADMIN')) {
+    if (!active || (active.status === 'PENDING_APPROVAL' && active.role !== 'SUPER_ADMIN') || active.status === 'REJECTED') {
       router.push('/admin/login');
       return;
     }
-    setAssessment(getAssessment());
+    const asmnt = getAssessment(active.email);
+    if (!asmnt.adminEmail) asmnt.adminEmail = active.email;
+    setAssessment(asmnt);
   }, [router]);
 
   if (!assessment) return null;

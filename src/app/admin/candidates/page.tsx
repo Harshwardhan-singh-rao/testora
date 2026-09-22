@@ -31,11 +31,11 @@ export default function CandidatesPage() {
 
   useEffect(() => {
     const active = getCurrentAdmin();
-    if (!active || (active.status === 'PENDING_APPROVAL' && active.role !== 'SUPER_ADMIN')) {
+    if (!active || (active.status === 'PENDING_APPROVAL' && active.role !== 'SUPER_ADMIN') || active.status === 'REJECTED') {
       router.push('/admin/login');
       return;
     }
-    setCandidates(getCandidates());
+    setCandidates(getCandidates(active.email));
   }, [router]);
 
   const clearLocalBlockCacheForEmail = (email: string) => {
@@ -51,22 +51,24 @@ export default function CandidatesPage() {
     e.preventDefault();
     if (!newName.trim() || !newEmail.trim()) return;
 
-    // Clear previous block lock for this email so admin can test cleanly
+    const active = getCurrentAdmin();
+    const adminEmail = active?.email || 'admin@testora.com';
     clearLocalBlockCacheForEmail(newEmail.trim());
 
     const token = `token-${newName.toLowerCase().replace(/[^a-z0-9]/g, '')}-${Math.floor(100 + Math.random() * 900)}`;
     const newCand: Candidate = {
       id: `cand-${Date.now()}`,
+      adminEmail,
       name: newName.trim(),
       email: newEmail.trim(),
       invitationToken: token,
-      assessmentId: 'asmnt-tech-club-2026',
+      assessmentId: `asmnt-${adminEmail.replace(/[^a-z0-9]/g, '-')}`,
       status: 'INVITED',
       invitedAt: new Date().toISOString(),
     };
 
     saveCandidate(newCand);
-    setCandidates(getCandidates());
+    setCandidates(getCandidates(adminEmail));
     setNewName('');
     setNewEmail('');
   };

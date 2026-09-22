@@ -46,16 +46,16 @@ export default function AdminDashboardPage() {
       return;
     }
 
-    if (active.status === 'PENDING_APPROVAL' && active.role !== 'SUPER_ADMIN') {
+    if ((active.status === 'PENDING_APPROVAL' && active.role !== 'SUPER_ADMIN') || active.status === 'REJECTED') {
       router.push('/admin/login');
       return;
     }
 
     setCurrentAdminState(active);
     setAdminUsersState(getAdminUsers());
-    setAssessment(getAssessment());
-    setCandidates(getCandidates());
-    setSessions(getSessions());
+    setAssessment(getAssessment(active.email));
+    setCandidates(getCandidates(active.email));
+    setSessions(getSessions(active.email));
   };
 
   useEffect(() => {

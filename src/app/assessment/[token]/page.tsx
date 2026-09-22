@@ -17,7 +17,7 @@ import {
   Ban,
   CalendarX
 } from 'lucide-react';
-import { getAssessment, getCandidates, saveCandidate, getSessions, saveSession, getSessionByCandidate } from '@/lib/storage';
+import { getAssessment, getAllAssessments, getCandidates, saveCandidate, getSessions, saveSession, getSessionByCandidate } from '@/lib/storage';
 import { calculateSessionScore } from '@/lib/scoring';
 import { Assessment, Candidate, Question, Session, IntegrityEvent } from '@/types';
 import { Watermark } from '@/components/Watermark';
@@ -146,7 +146,18 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
 
   // Initial candidate & assessment setup
   useEffect(() => {
-    const asmnt = getAssessment();
+    const allAsmnts = getAllAssessments();
+    const candidates = getCandidates();
+    let candByToken = candidates.find((c) => c.invitationToken === token);
+
+    let asmnt =
+      allAsmnts.find(
+        (a) =>
+          a.sharableToken === token ||
+          a.id === token ||
+          (candByToken && candByToken.assessmentId === a.id)
+      ) || getAssessment();
+
     setAssessment(asmnt);
 
     if (asmnt.durationMinutes) {
@@ -166,8 +177,7 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
     }
 
     const activeCandId = typeof window !== 'undefined' ? sessionStorage.getItem(`active_cand_${token}`) : null;
-    const candidates = getCandidates();
-    let cand = activeCandId ? candidates.find((c) => c.id === activeCandId) : null;
+    let cand = activeCandId ? candidates.find((c) => c.id === activeCandId) : candByToken || null;
 
     if (cand) {
       setCandidate(cand);
@@ -198,6 +208,7 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
         const expiresAt = new Date(now.getTime() + asmnt.durationMinutes * 60 * 1000).toISOString();
         const newSession: Session = {
           id: `sess-${cand.id}`,
+          adminEmail: asmnt.adminEmail || cand.adminEmail || 'admin@testora.com',
           candidateId: cand.id,
           candidateName: cand.name,
           candidateEmail: cand.email,
@@ -247,6 +258,7 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
 
     const newCand: Candidate = {
       id: candId,
+      adminEmail: assessment.adminEmail || 'admin@testora.com',
       name: candidateName.trim(),
       email: emailToUse,
       invitationToken: token,
@@ -262,6 +274,7 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
     const expiresAt = new Date(now.getTime() + assessment.durationMinutes * 60 * 1000).toISOString();
     const newSession: Session = {
       id: `sess-${candId}`,
+      adminEmail: assessment.adminEmail || 'admin@testora.com',
       candidateId: candId,
       candidateName: candidateName.trim(),
       candidateEmail: emailToUse,

@@ -30,6 +30,7 @@ export interface IntegritySettings {
 
 export interface Assessment {
   id: string;
+  adminEmail?: string;
   title: string;
   clubName: string;
   description: string;
@@ -46,6 +47,7 @@ export interface Assessment {
 
 export interface Candidate {
   id: string;
+  adminEmail?: string;
   name: string;
   email: string;
   invitationToken: string;
@@ -90,6 +92,7 @@ export interface SubjectiveEvaluation {
 
 export interface Session {
   id: string;
+  adminEmail?: string;
   candidateId: string;
   candidateName?: string;
   candidateEmail?: string;

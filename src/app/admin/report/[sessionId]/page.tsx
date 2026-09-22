@@ -36,7 +36,7 @@ export default function SessionReportPage({ params }: { params: Promise<{ sessio
   useEffect(() => {
     const loadReportData = async () => {
       const active = getCurrentAdmin();
-      if (!active || (active.status === 'PENDING_APPROVAL' && active.role !== 'SUPER_ADMIN')) {
+      if (!active || (active.status === 'PENDING_APPROVAL' && active.role !== 'SUPER_ADMIN') || active.status === 'REJECTED') {
         router.push('/admin/login');
         return;
       }
@@ -51,6 +51,7 @@ export default function SessionReportPage({ params }: { params: Promise<{ sessio
         if (!c) {
           c = {
             id: s.candidateId,
+            adminEmail: s.adminEmail,
             name: s.candidateName || 'Candidate',
             email: s.candidateEmail || 'N/A',
             invitationToken: s.candidateId,
@@ -60,7 +61,7 @@ export default function SessionReportPage({ params }: { params: Promise<{ sessio
           };
         }
         setCandidate(c);
-        setAssessment(getAssessment());
+        setAssessment(getAssessment(s.adminEmail || active.email));
       }
     };
 
