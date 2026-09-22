@@ -145,8 +145,6 @@ export default function AdminProfilePage() {
               </div>
             </div>
 
-            </div>
-
             {/* Change Password Section */}
             <div className="pt-8 border-t border-slate-100">
               <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
