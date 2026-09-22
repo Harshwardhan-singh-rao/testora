@@ -1,0 +1,182 @@
+import { Assessment, Candidate, Session } from '@/types';
+
+// Default link expiration set to 24 hours from now
+const defaultLinkExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+
+export const SEED_ASSESSMENT: Assessment = {
+  id: 'asmnt-tech-club-2026',
+  title: 'Admin Portal',
+  clubName: 'Admin Portal',
+  description: 'Comprehensive remote assessment evaluating algorithm fundamentals, systems architecture, web performance, and problem-solving resilience.',
+  durationMinutes: 40,
+  linkExpiresAt: defaultLinkExpiry,
+  passingPercentage: 70,
+  status: 'PUBLISHED',
+  isRandomized: true,
+  sharableToken: 'live-test-link',
+  createdAt: '2026-09-20T10:00:00Z',
+  integritySettings: {
+    strictBlockMode: true,
+    trackFocus: true,
+    trackFullscreen: true,
+    trackClipboard: true,
+    enableWatermark: true,
+    allowCopyPaste: false,
+  },
+  questions: [
+    {
+      id: 'q1',
+      prompt: 'Which data structure enforces Last-In-First-Out (LIFO) order for insertion and deletion?',
+      type: 'mcq',
+      options: ['Queue', 'Stack', 'Linked List', 'Binary Heap'],
+      correctAnswers: ['Stack'],
+      marks: 5,
+      difficulty: 'Easy',
+      skillTag: 'Data Structures',
+      explanation: 'A Stack processes elements in LIFO order using push and pop operations.',
+    },
+    {
+      id: 'q2',
+      prompt: 'What is the average time complexity of searching for an element in a balanced Binary Search Tree (BST)?',
+      type: 'mcq',
+      options: ['O(1)', 'O(n)', 'O(log n)', 'O(n log n)'],
+      correctAnswers: ['O(log n)'],
+      marks: 5,
+      difficulty: 'Easy',
+      skillTag: 'Algorithms',
+      explanation: 'In a balanced BST, halving the search space at each node yields O(log n) performance.',
+    },
+    {
+      id: 'q3',
+      prompt: 'Select all standard React Hooks provided out-of-the-box by React:',
+      type: 'multiple_select',
+      options: ['useState', 'useSelect', 'useEffect', 'useMemo', 'useDatabase'],
+      correctAnswers: ['useState', 'useEffect', 'useMemo'],
+      marks: 5,
+      difficulty: 'Medium',
+      skillTag: 'Frontend Architecture',
+      explanation: 'useState, useEffect, and useMemo are standard React hooks built into React.',
+    },
+    {
+      id: 'q4',
+      prompt: 'True or False: REST APIs require continuous WebSocket TCP connections to send JSON payloads.',
+      type: 'true_false',
+      options: ['True', 'False'],
+      correctAnswers: ['False'],
+      marks: 5,
+      difficulty: 'Easy',
+      skillTag: 'Networking',
+      explanation: 'REST operates over HTTP/HTTPS stateless request-response cycles, not persistent WebSockets.',
+    },
+    {
+      id: 'q5',
+      prompt: 'Explain the key distinction between a process and a thread in operating systems, specifically regarding memory sharing.',
+      type: 'short_answer',
+      rubric: {
+        criteria: 'Must mention memory space separation for processes vs shared memory address space among threads of the same process.',
+        maxMarks: 10,
+        keywords: ['memory', 'address space', 'shared', 'isolation', 'context switch'],
+      },
+      marks: 10,
+      difficulty: 'Medium',
+      skillTag: 'Operating Systems',
+    },
+    {
+      id: 'q6',
+      prompt: 'How does optimistic concurrency control differ from pessimistic concurrency control in high-throughput database systems?',
+      type: 'short_answer',
+      rubric: {
+        criteria: 'Must explain lock-less validation/versioning at commit time (optimistic) vs locking resources beforehand (pessimistic).',
+        maxMarks: 10,
+        keywords: ['lock', 'version', 'commit', 'validation', 'conflict', 'rollback'],
+      },
+      marks: 10,
+      difficulty: 'Medium',
+      skillTag: 'Databases',
+    },
+    {
+      id: 'q7',
+      prompt: 'Design scenario: You need to implement a high-performance rate limiter handling 20,000 requests per second across microservices. Describe your choice of data structure/store (e.g. Redis Leaky Bucket/Sliding Window) and how you minimize latency.',
+      type: 'scenario',
+      rubric: {
+        criteria: 'Evaluates choice of distributed key-value store (e.g., Redis), algorithm choice (sliding window / token bucket / leaky bucket), and handling race conditions (Lua scripts / atomic counters).',
+        maxMarks: 10,
+        keywords: ['redis', 'token bucket', 'sliding window', 'lua', 'atomic', 'latency'],
+      },
+      marks: 10,
+      difficulty: 'Hard',
+      skillTag: 'System Design',
+    }
+  ],
+};
+
+export const SEED_CANDIDATES: Candidate[] = [
+  {
+    id: 'cand-alex-01',
+    name: 'Alex Rivers',
+    email: 'alex.rivers@university.edu',
+    invitationToken: 'token-alex-123',
+    assessmentId: 'asmnt-tech-club-2026',
+    status: 'SUBMITTED',
+    invitedAt: '2026-09-21T09:00:00Z',
+  },
+  {
+    id: 'cand-priya-02',
+    name: 'Priya Sharma',
+    email: 'priya.sharma@techinst.edu',
+    invitationToken: 'token-priya-456',
+    assessmentId: 'asmnt-tech-club-2026',
+    status: 'SUBMITTED',
+    invitedAt: '2026-09-21T09:15:00Z',
+  },
+];
+
+export const SEED_SESSIONS: Session[] = [
+  {
+    id: 'sess-alex-01',
+    candidateId: 'cand-alex-01',
+    assessmentId: 'asmnt-tech-club-2026',
+    startedAt: '2026-09-21T10:00:00Z',
+    submittedAt: '2026-09-21T10:32:15Z',
+    expiresAt: '2026-09-21T10:40:00Z',
+    objectiveScore: 20,
+    subjectiveScore: 26,
+    maxScore: 50,
+    totalScore: 46,
+    reviewStatus: 'CLEAN',
+    finalDecision: 'ACCEPTED',
+    reviewerNotes: 'Excellent grasp of system design and OS primitives.',
+    answers: {
+      q1: { questionId: 'q1', candidateResponse: 'Stack', savedAt: '2026-09-21T10:02:00Z', isAutosaved: true },
+      q2: { questionId: 'q2', candidateResponse: 'O(log n)', savedAt: '2026-09-21T10:04:12Z', isAutosaved: true },
+      q3: { questionId: 'q3', candidateResponse: ['useState', 'useEffect', 'useMemo'], savedAt: '2026-09-21T10:08:30Z', isAutosaved: true },
+      q4: { questionId: 'q4', candidateResponse: 'False', savedAt: '2026-09-21T10:10:00Z', isAutosaved: true },
+      q5: {
+        questionId: 'q5',
+        candidateResponse: 'A process is an isolated execution unit with private memory address space. Threads belong to a process and share memory space.',
+        savedAt: '2026-09-21T10:18:40Z',
+        isAutosaved: true,
+      },
+      q6: {
+        questionId: 'q6',
+        candidateResponse: 'Pessimistic concurrency locks data upfront. Optimistic concurrency validates version counters upon commit.',
+        savedAt: '2026-09-21T10:25:10Z',
+        isAutosaved: true,
+      },
+      q7: {
+        questionId: 'q7',
+        candidateResponse: 'Redis cluster with a Sliding Window algorithm via Lua scripts for atomic updates.',
+        savedAt: '2026-09-21T10:31:00Z',
+        isAutosaved: true,
+      },
+    },
+    integrityEvents: [
+      { id: 'evt-1', type: 'FULLSCREEN_ENTER', timestamp: '2026-09-21T10:00:05Z', details: 'Candidate initiated fullscreen assessment.' },
+    ],
+    evaluations: {
+      q5: { questionId: 'q5', score: 9, maxScore: 10, rubricFeedback: 'Clear distinction between process isolation and thread memory sharing.', confidence: 'High', evaluator: 'AI Rubric Engine' },
+      q6: { questionId: 'q6', score: 9, maxScore: 10, rubricFeedback: 'Accurate explanation of lock vs version validation.', confidence: 'High', evaluator: 'AI Rubric Engine' },
+      q7: { questionId: 'q7', score: 8, maxScore: 10, rubricFeedback: 'Well structured architectural choice (Redis + Lua).', confidence: 'High', evaluator: 'AI Rubric Engine' },
+    },
+  },
+];
