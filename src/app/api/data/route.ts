@@ -177,16 +177,11 @@ export async function POST(request: Request) {
           { upsert: true, new: true }
         );
       } else if (action === 'saveExamVersion' && examVersion) {
-        const existing = await ExamVersionModel.findOne({ id: examVersion.id });
-        if (existing) {
-          if (existing.status === 'DRAFT') {
-            await ExamVersionModel.findOneAndUpdate({ id: examVersion.id }, examVersion);
-          } else if (examVersion.status === 'ARCHIVED') {
-            await ExamVersionModel.findOneAndUpdate({ id: examVersion.id }, { status: 'ARCHIVED' });
-          }
-        } else {
-          await ExamVersionModel.create(examVersion);
-        }
+        await ExamVersionModel.findOneAndUpdate(
+          { id: examVersion.id },
+          examVersion,
+          { upsert: true, new: true }
+        );
       } else if (action === 'saveAdminUser' && adminUser) {
         await AdminUserModel.findOneAndUpdate(
           { $or: [{ id: adminUser.id }, { email: adminUser.email }] },

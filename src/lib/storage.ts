@@ -57,22 +57,64 @@ export const getAllAssessments = (): Assessment[] => {
 export const getAssessment = (adminEmail?: string): Assessment => {
   if (typeof window === 'undefined') return SEED_ASSESSMENT;
 
-  if (adminEmail) {
-    const all = getAllAssessments();
-    const matched = all.find((a) => a.adminEmail && a.adminEmail.toLowerCase() === adminEmail.trim().toLowerCase());
-    if (matched) return matched;
+  let targetEmail = adminEmail;
+  if (!targetEmail) {
+    // If no email provided, fall back to currently logged in admin if available
+    const activeStored = localStorage.getItem('clubselect_current_admin');
+    if (activeStored) {
+      try {
+        const parsed = JSON.parse(activeStored);
+        if (parsed?.email) targetEmail = parsed.email;
+      } catch {}
+    }
+  }
 
-    // Create a personalized assessment for this admin if not exists
-    const normEmail = adminEmail.trim().toLowerCase();
-    const newAdminAsmnt: Assessment = {
-      ...SEED_ASSESSMENT,
-      id: `asmnt-${normEmail.replace(/[^a-z0-9]/g, '-')}`,
-      adminEmail: normEmail,
-      title: `${normEmail.split('@')[0]}'s Recruitment Assessment`,
-      sharableToken: `link-${normEmail.replace(/[^a-z0-9]/g, '')}-${Date.now().toString().slice(-4)}`,
-    };
-    saveAssessment(newAdminAsmnt);
-    return newAdminAsmnt;
+  if (targetEmail) {
+    const normEmail = targetEmail.trim().toLowerCase();
+    const all = getAllAssessments();
+    let matched = all.find((a) => a.adminEmail && a.adminEmail.toLowerCase() === normEmail);
+
+    const asmntId = matched?.id || `asmnt-${normEmail.replace(/[^a-z0-9]/g, '-')}`;
+    const initialVersionId = `version-1-${normEmail.replace(/[^a-z0-9]/g, '-')}`;
+
+    if (!matched) {
+      matched = {
+        ...SEED_ASSESSMENT,
+        id: asmntId,
+        adminEmail: normEmail,
+        title: `${normEmail.split('@')[0]}'s Recruitment Assessment`,
+        sharableToken: `link-${normEmail.replace(/[^a-z0-9]/g, '')}-${Date.now().toString().slice(-4)}`,
+        currentVersionId: initialVersionId,
+      };
+      saveAssessment(matched);
+    }
+
+    // Ensure dedicated ExamVersion exists for this admin's assessment
+    const allVersions = getExamVersions();
+    const adminVersions = allVersions.filter((v) => v.examId === matched!.id);
+
+    if (adminVersions.length === 0 || matched.currentVersionId === 'v1-0-0' || !matched.currentVersionId) {
+      const initialExamVersion: ExamVersion = {
+        id: initialVersionId,
+        examId: matched.id,
+        versionNumber: 1,
+        status: 'PUBLISHED',
+        createdAt: new Date().toISOString(),
+        questions: SEED_EXAM_VERSIONS[0]?.questions.map((q, idx) => ({
+          ...q,
+          id: `q-${matched!.id}-${idx + 1}`,
+          examVersionId: initialVersionId,
+        })) || [],
+      };
+      saveExamVersion(initialExamVersion);
+
+      if (matched.currentVersionId !== initialVersionId) {
+        matched.currentVersionId = initialVersionId;
+        saveAssessment(matched);
+      }
+    }
+
+    return matched;
   }
 
   const stored = localStorage.getItem(STORAGE_KEYS.ASSESSMENT);

@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { getCurrentAdmin } from '@/lib/auth';
 import { getAssessment, saveAssessment, getExamVersions, saveExamVersion } from '@/lib/storage';
+import { SEED_EXAM_VERSIONS } from '@/lib/seed-data';
 import { getAssessmentUrl } from '@/lib/url';
 import { Assessment, ExamVersion, Question, QuestionType } from '@/types';
 
@@ -55,17 +56,21 @@ export default function AssessmentBuilderPage() {
     
     if (!draft) {
       // If there's a published version, copy questions from it to a new draft
-      const published = asmnt.currentVersionId ? versions.find(v => v.id === asmnt.currentVersionId) : null;
+      const published = asmnt.currentVersionId ? versions.find(v => v.id === asmnt.currentVersionId) : (versions.length > 0 ? versions[versions.length - 1] : null);
       const newVersionNum = versions.length + 1;
       const newVersionId = `version-${newVersionNum}-${Date.now()}`;
       
+      const initialQuestions = published
+        ? published.questions.map(q => ({ ...q, examVersionId: newVersionId, id: `q-${Date.now()}-${Math.random().toString(36).substr(2, 9)}` }))
+        : (SEED_EXAM_VERSIONS[0]?.questions.map((q, idx) => ({ ...q, examVersionId: newVersionId, id: `q-${asmnt.id}-${idx + 1}` })) || []);
+
       draft = {
         id: newVersionId,
         examId: asmnt.id,
         versionNumber: newVersionNum,
         status: 'DRAFT',
         createdAt: new Date().toISOString(),
-        questions: published ? published.questions.map(q => ({ ...q, examVersionId: newVersionId, id: `q-${Date.now()}-${Math.random().toString(36).substr(2, 9)}` })) : []
+        questions: initialQuestions
       };
     }
     setExamVersion(draft);

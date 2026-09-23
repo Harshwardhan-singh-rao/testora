@@ -240,9 +240,9 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
     saveCandidate(newCand);
     setCandidate(newCand);
 
-    const versionIdToUse = assessment.currentVersionId;
+    const versionIdToUse = assessment.currentVersionId || '';
     const allVersions = getExamVersions();
-    const version = allVersions.find(v => v.id === versionIdToUse);
+    const version = allVersions.find(v => v.id === versionIdToUse) || allVersions.find(v => v.examId === assessment.id && v.status === 'PUBLISHED') || allVersions.find(v => v.examId === assessment.id);
     if (version) setExamVersion(version);
 
     const now = new Date();
