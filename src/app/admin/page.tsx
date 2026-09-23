@@ -30,7 +30,13 @@ import { AdminUser, Assessment, Candidate, Session } from '@/types';
 
 export default function AdminDashboardPage() {
   const router = useRouter();
-  const [assessment, setAssessment] = useState<Assessment | null>(null);
+  const [assessment, setAssessment] = useState<Assessment | null>(() => {
+    if (typeof window !== 'undefined') {
+      const active = getCurrentAdmin();
+      return getAssessment(active?.email);
+    }
+    return null;
+  });
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [adminUsers, setAdminUsersState] = useState<AdminUser[]>([]);

@@ -28,7 +28,13 @@ import { Assessment, ExamVersion, Question, QuestionType } from '@/types';
 
 export default function AssessmentBuilderPage() {
   const router = useRouter();
-  const [assessment, setAssessment] = useState<Assessment | null>(null);
+  const [assessment, setAssessment] = useState<Assessment | null>(() => {
+    if (typeof window !== 'undefined') {
+      const active = getCurrentAdmin();
+      return getAssessment(active?.email);
+    }
+    return null;
+  });
   const [examVersion, setExamVersion] = useState<ExamVersion | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [showDoneModal, setShowDoneModal] = useState(false);
