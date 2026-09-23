@@ -33,6 +33,7 @@ export default function SessionReportPage({ params }: { params: Promise<{ sessio
   const [examVersion, setExamVersion] = useState<ExamVersion | null>(null);
   const [notes, setNotes] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [decisionFeedback, setDecisionFeedback] = useState<string | null>(null);
 
   useEffect(() => {
     const loadReportData = async () => {
@@ -82,8 +83,6 @@ export default function SessionReportPage({ params }: { params: Promise<{ sessio
       </div>
     );
   }
-
-  const [decisionFeedback, setDecisionFeedback] = useState<string | null>(null);
 
   const handleDecisionChange = (targetDecision: 'ACCEPTED' | 'REJECTED') => {
     const newDecision = session.finalDecision === targetDecision ? 'PENDING' : targetDecision;
