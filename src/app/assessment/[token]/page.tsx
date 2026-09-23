@@ -131,15 +131,17 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
       const allAsmnts = getAllAssessments();
       const allVersions = getExamVersions();
       const candidates = getCandidates();
-      let candByToken = candidates.find((c) => c.invitationToken === token);
+      let asmnt = allAsmnts.find((a) => a.sharableToken === token || a.id === token);
+      let candByToken: Candidate | null | undefined = null;
 
-      let asmnt =
-        allAsmnts.find(
-          (a) =>
-            a.sharableToken === token ||
-            a.id === token ||
-            (candByToken && candByToken.assessmentId === a.id)
-        ) || getAssessment();
+      if (!asmnt) {
+        candByToken = candidates.find((c) => c.invitationToken === token);
+        if (candByToken) {
+          asmnt = allAsmnts.find((a) => a.id === candByToken?.assessmentId);
+        }
+      }
+
+      asmnt = asmnt || getAssessment();
 
       setAssessment(asmnt);
 

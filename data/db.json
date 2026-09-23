@@ -5,14 +5,14 @@
     "title": "AUH TechXAI Recruitment Assessment",
     "clubName": "Admin Portal",
     "description": "Comprehensive remote assessment evaluating algorithm fundamentals, systems architecture, web performance, and problem-solving resilience.",
-    "durationMinutes": 40,
+    "durationMinutes": 5,
     "linkExpiresAt": "2026-09-24T13:15:29.842Z",
     "passingPercentage": 70,
     "status": "PUBLISHED",
     "isRandomized": true,
     "sharableToken": "live-test-link",
     "createdAt": "2026-09-20T10:00:00Z",
-    "currentVersionId": "version-1",
+    "currentVersionId": "version-2-1790169482026",
     "integritySettings": {
       "strictBlockMode": true,
       "trackFocus": true,
@@ -29,14 +29,14 @@
       "title": "AUH TechXAI Recruitment Assessment",
       "clubName": "Admin Portal",
       "description": "Comprehensive remote assessment evaluating algorithm fundamentals, systems architecture, web performance, and problem-solving resilience.",
-      "durationMinutes": 40,
+      "durationMinutes": 5,
       "linkExpiresAt": "2026-09-24T13:15:29.842Z",
       "passingPercentage": 70,
       "status": "PUBLISHED",
       "isRandomized": true,
       "sharableToken": "live-test-link",
       "createdAt": "2026-09-20T10:00:00Z",
-      "currentVersionId": "version-1",
+      "currentVersionId": "version-2-1790169482026",
       "integritySettings": {
         "strictBlockMode": true,
         "trackFocus": true,
@@ -419,6 +419,378 @@
           "explanation": "Prompt correction and clear communication demonstrate professional accountability."
         }
       ]
+    },
+    {
+      "id": "version-2-1790169482026",
+      "examId": "asmnt-tech-club-2026",
+      "versionNumber": 2,
+      "status": "PUBLISHED",
+      "createdAt": "2026-09-23T13:18:02.026Z",
+      "questions": [
+        {
+          "id": "q-1790169482026-ok375bb8m",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "An Event Manager should communicate schedule changes to participants as soon as possible, rather than assuming everyone will hear about them.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "True"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Event Management",
+          "explanation": "Proactive communication is essential for effective event management."
+        },
+        {
+          "id": "q-1790169482026-kepix7468",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "A Secretary's responsibility ends once the event is completed, so maintaining post-event records is unnecessary.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "False"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Administration",
+          "explanation": "Post-event records are essential for accountability and future reference."
+        },
+        {
+          "id": "q-1790169482026-my1cvbemv",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "If a technical issue affects one team during a competition, the organising team should follow the announced rules and handle the situation consistently and fairly.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "True"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Fair Play",
+          "explanation": "Consistency and fairness are foundational to credible event management."
+        },
+        {
+          "id": "q-1790169482026-xe4hp0rs0",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "A club office bearer should prioritise personal recognition over the successful execution of the team's activities.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "False"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Leadership",
+          "explanation": "Team success should always take priority over personal recognition."
+        },
+        {
+          "id": "q-1790169482026-6yvt6awn5",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "A TechXAI event can include students with different levels of technical knowledge, provided the activities are designed to encourage participation and learning.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "True"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Inclusivity",
+          "explanation": "Inclusive event design encourages broader participation and learning."
+        },
+        {
+          "id": "q-1790169482026-2ruw1eal0",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "If an event receives fewer registrations than expected, the Event Manager should immediately cancel it without consulting the team.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "False"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Decision Making",
+          "explanation": "Decisions should be made collaboratively, not unilaterally."
+        },
+        {
+          "id": "q-1790169482026-mzao7kdr4",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "A Secretary should maintain accurate meeting minutes, including important decisions, assigned responsibilities and deadlines.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "True"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Administration",
+          "explanation": "Accurate documentation is a core secretarial responsibility."
+        },
+        {
+          "id": "q-1790169482026-gk2dbk8ac",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "If a participant is a personal friend of an office bearer, they may be given an advantage over other participants without any official approval.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "False"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Ethics",
+          "explanation": "Favouritism undermines fairness and credibility of the event."
+        },
+        {
+          "id": "q-1790169482026-goyma06sm",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "During event planning, identifying possible risks and preparing backup arrangements can help the organising team respond to unexpected situations.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "True"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Risk Management",
+          "explanation": "Risk assessment and contingency planning are critical for successful events."
+        },
+        {
+          "id": "q-1790169482026-5bjhqk2u4",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "An office bearer should be willing to accept feedback and make improvements, even when the feedback challenges their original approach.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "True"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Leadership",
+          "explanation": "Openness to feedback is a hallmark of effective leadership."
+        },
+        {
+          "id": "q-1790169482026-tfipdnx3h",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "You are the Event Manager of AUH TechXAI. During a live AI competition, the event platform crashes, two teams dispute the judging decision, and the next round is scheduled to begin in 5 minutes. How would you handle the situation while ensuring fairness, effective coordination and minimal disruption to the event?",
+          "type": "scenario",
+          "rubric": {
+            "criteria": "Assess the candidate's ability to prioritise issues, coordinate with the technical team and judges, implement a practical backup plan, communicate transparently, and maintain fairness without making unauthorised decisions.",
+            "maxMarks": 5,
+            "keywords": [
+              "incident prioritisation",
+              "technical backup plan",
+              "fair judging",
+              "team coordination",
+              "transparent communication",
+              "time management",
+              "accountability"
+            ]
+          },
+          "marks": 5,
+          "difficulty": "Hard",
+          "skillTag": "Crisis Management"
+        },
+        {
+          "id": "q-1790169482026-g90go5eaz",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "The event projector suddenly stops working. What should you do first?",
+          "type": "mcq",
+          "options": [
+            "Cancel the event",
+            "Activate the backup plan",
+            "Ignore the issue",
+            "Blame the technical team"
+          ],
+          "correctAnswers": [
+            "Activate the backup plan"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Problem Solving",
+          "explanation": "Activating a backup plan is the appropriate first response to technical failures."
+        },
+        {
+          "id": "q-1790169482026-dqc2ishyf",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "Two teams dispute a judging decision. What should you do?",
+          "type": "mcq",
+          "options": [
+            "Support the louder team",
+            "Change the result immediately",
+            "Refer to the announced criteria and consult the judges",
+            "Let the audience decide"
+          ],
+          "correctAnswers": [
+            "Refer to the announced criteria and consult the judges"
+          ],
+          "marks": 1,
+          "difficulty": "Medium",
+          "skillTag": "Conflict Resolution",
+          "explanation": "Following established criteria ensures fair and transparent conflict resolution."
+        },
+        {
+          "id": "q-1790169482026-gxurh28fd",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "Registrations exceed the venue capacity. What is your priority?",
+          "type": "mcq",
+          "options": [
+            "Admit everyone regardless of safety",
+            "Follow the approved capacity and registration policy",
+            "Allow only your friends inside",
+            "Close registration without informing anyone"
+          ],
+          "correctAnswers": [
+            "Follow the approved capacity and registration policy"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Safety & Policy",
+          "explanation": "Safety regulations and established policies must always be followed."
+        },
+        {
+          "id": "q-1790169482026-emwyc0ran",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "A volunteer fails to complete an important task before the event. What should you do?",
+          "type": "mcq",
+          "options": [
+            "Publicly insult the volunteer",
+            "Ignore the unfinished task",
+            "Reassign the task, coordinate support and address accountability afterward",
+            "Cancel the entire event"
+          ],
+          "correctAnswers": [
+            "Reassign the task, coordinate support and address accountability afterward"
+          ],
+          "marks": 1,
+          "difficulty": "Medium",
+          "skillTag": "Team Management",
+          "explanation": "Constructive problem-solving and post-event accountability are best practices."
+        },
+        {
+          "id": "q-1790169482026-u2htt9xoz",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "A sponsor requests extra stage time during a tightly scheduled competition. What should you do?",
+          "type": "mcq",
+          "options": [
+            "Approve it immediately",
+            "Reject it without discussion",
+            "Check commitments, consult the coordinator and adjust only if feasible",
+            "Ask participants to vote"
+          ],
+          "correctAnswers": [
+            "Check commitments, consult the coordinator and adjust only if feasible"
+          ],
+          "marks": 1,
+          "difficulty": "Medium",
+          "skillTag": "Stakeholder Management",
+          "explanation": "Balanced decision-making involves checking commitments and consulting relevant parties."
+        },
+        {
+          "id": "q-1790169482026-262pgwibk",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "An AI chatbot gives a convincing but incorrect answer. What is this commonly called?",
+          "type": "mcq",
+          "options": [
+            "Encryption",
+            "AI hallucination",
+            "Data backup",
+            "Cloud hosting"
+          ],
+          "correctAnswers": [
+            "AI hallucination"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "AI Literacy",
+          "explanation": "AI hallucination refers to when AI models generate plausible but factually incorrect outputs."
+        },
+        {
+          "id": "q-1790169482026-q8o9tzro3",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "Which is a responsible way to use AI when preparing event promotional content?",
+          "type": "mcq",
+          "options": [
+            "Publish everything without checking",
+            "Copy another club's content and claim it as original",
+            "Review the output, verify details and ensure originality",
+            "Enter confidential participant data into any AI tool"
+          ],
+          "correctAnswers": [
+            "Review the output, verify details and ensure originality"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "AI Ethics",
+          "explanation": "Responsible AI use requires reviewing outputs and ensuring originality."
+        },
+        {
+          "id": "q-1790169482026-v0fnjeywq",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "Your team rejects your event idea. What would you most likely do?",
+          "type": "mcq",
+          "options": [
+            "Stop contributing",
+            "Insist that your idea must be accepted",
+            "Listen to feedback, improve the idea and discuss alternatives",
+            "Blame the team"
+          ],
+          "correctAnswers": [
+            "Listen to feedback, improve the idea and discuss alternatives"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Teamwork",
+          "explanation": "Listening to feedback and collaborating on improvements demonstrates maturity."
+        },
+        {
+          "id": "q-1790169482026-12vu2yrpr",
+          "examVersionId": "version-2-1790169482026",
+          "prompt": "You realise you made a mistake in an official event announcement. What would you do?",
+          "type": "mcq",
+          "options": [
+            "Hide the mistake",
+            "Blame another team member",
+            "Correct it promptly and communicate the update clearly",
+            "Wait until someone complains"
+          ],
+          "correctAnswers": [
+            "Correct it promptly and communicate the update clearly"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Accountability",
+          "explanation": "Prompt correction and clear communication demonstrate professional accountability."
+        }
+      ]
     }
   ],
   "candidates": [
@@ -447,7 +819,7 @@
       "email": "harshrao0000@gmail.com",
       "invitationToken": "live-test-link",
       "assessmentId": "asmnt-tech-club-2026",
-      "status": "BLOCKED",
+      "status": "INVITED",
       "invitedAt": "2026-09-23T13:16:31.371Z"
     }
   ],
@@ -703,10 +1075,10 @@
           "details": "STRICT AUTO-BLOCK TRIGGERED: Exited required fullscreen mode. Candidate session permanently terminated."
         }
       ],
-      "reviewStatus": "BLOCKED_DISQUALIFIED",
-      "isBlocked": true,
+      "reviewStatus": "NEEDS_REVIEW",
+      "isBlocked": false,
       "blockedReason": "Exited required fullscreen mode",
-      "finalDecision": "BLOCKED"
+      "finalDecision": "PENDING"
     }
   ],
   "adminUsers": [
