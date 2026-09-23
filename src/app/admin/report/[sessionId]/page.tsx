@@ -20,9 +20,9 @@ import {
   FileDown
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { fetchServerData, getAssessment, getCandidates, getSessionById, saveSession } from '@/lib/storage';
+import { fetchServerData, getAssessment, getExamVersionById, getCandidates, getSessionById, saveSession } from '@/lib/storage';
 import { getCurrentAdmin } from '@/lib/auth';
-import { Assessment, Candidate, Session } from '@/types';
+import { Assessment, ExamVersion, Candidate, Session } from '@/types';
 
 export default function SessionReportPage({ params }: { params: Promise<{ sessionId: string }> }) {
   const router = useRouter();
@@ -30,6 +30,7 @@ export default function SessionReportPage({ params }: { params: Promise<{ sessio
   const [session, setSession] = useState<Session | null>(null);
   const [candidate, setCandidate] = useState<Candidate | null>(null);
   const [assessment, setAssessment] = useState<Assessment | null>(null);
+  const [examVersion, setExamVersion] = useState<ExamVersion | null>(null);
   const [notes, setNotes] = useState('');
   const [saveSuccess, setSaveSuccess] = useState(false);
 
@@ -62,13 +63,15 @@ export default function SessionReportPage({ params }: { params: Promise<{ sessio
         }
         setCandidate(c);
         setAssessment(getAssessment(s.adminEmail || active.email));
+        const v = getExamVersionById(s.examVersionId);
+        if (v) setExamVersion(v);
       }
     };
 
     loadReportData();
   }, [resolvedParams.sessionId]);
 
-  if (!session || !candidate || !assessment) {
+  if (!session || !candidate || !assessment || !examVersion) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-16 text-center space-y-4">
         <h1 className="text-xl font-bold text-slate-900">Submission Report Not Found</h1>
@@ -111,7 +114,7 @@ export default function SessionReportPage({ params }: { params: Promise<{ sessio
     content += `SUBMITTED ANSWERS BREAKDOWN:\n`;
     content += `----------------------------------------------------\n\n`;
 
-    assessment.questions.forEach((q, idx) => {
+    examVersion.questions.forEach((q, idx) => {
       const ans = session.answers[q.id];
       const evalRes = session.evaluations?.[q.id];
       const respStr = Array.isArray(ans?.candidateResponse) ? ans.candidateResponse.join(', ') : ans?.candidateResponse || 'No response submitted';
@@ -296,7 +299,7 @@ export default function SessionReportPage({ params }: { params: Promise<{ sessio
       <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <h2 className="text-lg font-bold text-slate-900">
-            Candidate Submitted Answers ({assessment.questions.length} Questions)
+            Candidate Submitted Answers ({examVersion.questions.length} Questions)
           </h2>
           <button
             onClick={handleDownloadAnswersFile}
@@ -308,7 +311,7 @@ export default function SessionReportPage({ params }: { params: Promise<{ sessio
         </div>
 
         <div className="space-y-6">
-          {assessment.questions.map((q, idx) => {
+          {examVersion.questions.map((q, idx) => {
             const answer = session.answers[q.id];
             const evaluation = session.evaluations?.[q.id];
             const candidateResp = answer?.candidateResponse;

@@ -1,14 +1,15 @@
-import { Assessment, Candidate, Session } from '@/types';
-import { SEED_ASSESSMENT, SEED_CANDIDATES, SEED_SESSIONS } from './seed-data';
+import { Assessment, ExamVersion, Candidate, Session } from '@/types';
+import { SEED_ASSESSMENT, SEED_EXAM_VERSIONS, SEED_CANDIDATES, SEED_SESSIONS } from './seed-data';
 
 const STORAGE_KEYS = {
   ASSESSMENT: 'clubselect_assessment',
   ASSESSMENTS: 'clubselect_assessments',
+  EXAM_VERSIONS: 'clubselect_exam_versions',
   CANDIDATES: 'clubselect_candidates',
   SESSIONS: 'clubselect_sessions',
 };
 
-export const fetchServerData = async (): Promise<{ assessment: Assessment; assessments?: Assessment[]; candidates: Candidate[]; sessions: Session[] } | null> => {
+export const fetchServerData = async (): Promise<{ assessment: Assessment; assessments?: Assessment[]; examVersions: ExamVersion[]; candidates: Candidate[]; sessions: Session[] } | null> => {
   if (typeof window === 'undefined') return null;
   try {
     const res = await fetch('/api/data', { cache: 'no-store' });
@@ -19,6 +20,9 @@ export const fetchServerData = async (): Promise<{ assessment: Assessment; asses
       }
       if (data.assessments && Array.isArray(data.assessments)) {
         localStorage.setItem(STORAGE_KEYS.ASSESSMENTS, JSON.stringify(data.assessments));
+      }
+      if (data.examVersions && Array.isArray(data.examVersions)) {
+        localStorage.setItem(STORAGE_KEYS.EXAM_VERSIONS, JSON.stringify(data.examVersions));
       }
       if (data.candidates) {
         localStorage.setItem(STORAGE_KEYS.CANDIDATES, JSON.stringify(data.candidates));
@@ -106,6 +110,46 @@ export const saveAssessment = (assessment: Assessment): void => {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ action: 'saveAssessment', assessment }),
+  }).catch(() => {});
+};
+
+export const getExamVersions = (): ExamVersion[] => {
+  if (typeof window === 'undefined') return SEED_EXAM_VERSIONS;
+  const stored = localStorage.getItem(STORAGE_KEYS.EXAM_VERSIONS);
+  if (!stored) {
+    localStorage.setItem(STORAGE_KEYS.EXAM_VERSIONS, JSON.stringify(SEED_EXAM_VERSIONS));
+    return SEED_EXAM_VERSIONS;
+  }
+  try {
+    const list = JSON.parse(stored);
+    return Array.isArray(list) ? list : SEED_EXAM_VERSIONS;
+  } catch {
+    return SEED_EXAM_VERSIONS;
+  }
+};
+
+export const getExamVersionById = (id: string): ExamVersion | undefined => {
+  return getExamVersions().find(v => v.id === id);
+};
+
+export const saveExamVersion = (examVersion: ExamVersion): void => {
+  if (typeof window === 'undefined') return;
+
+  const all = getExamVersions();
+  const idx = all.findIndex(v => v.id === examVersion.id);
+
+  if (idx >= 0) {
+    all[idx] = examVersion;
+  } else {
+    all.push(examVersion);
+  }
+
+  localStorage.setItem(STORAGE_KEYS.EXAM_VERSIONS, JSON.stringify(all));
+
+  fetch('/api/data', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'saveExamVersion', examVersion }),
   }).catch(() => {});
 };
 
@@ -221,10 +265,34 @@ export const saveSession = (session: Session): void => {
   }).catch(() => {});
 };
 
+export const grantReattempt = (candidate: Candidate): void => {
+  if (typeof window === 'undefined') return;
+  const updatedCandidate = { ...candidate, status: 'INVITED' as const };
+  saveCandidate(updatedCandidate);
+
+  // Remove their session from local storage
+  const stored = localStorage.getItem(STORAGE_KEYS.SESSIONS);
+  let sessions: Session[] = [];
+  try {
+    sessions = stored ? JSON.parse(stored) : [];
+  } catch {
+    sessions = [];
+  }
+  sessions = sessions.filter(s => s.candidateId !== candidate.id);
+  localStorage.setItem(STORAGE_KEYS.SESSIONS, JSON.stringify(sessions));
+
+  fetch('/api/data', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'grantReattempt', candidate }),
+  }).catch(() => {});
+};
+
 export const resetToSeedData = (): void => {
   if (typeof window === 'undefined') return;
   localStorage.setItem(STORAGE_KEYS.ASSESSMENT, JSON.stringify(SEED_ASSESSMENT));
   localStorage.setItem(STORAGE_KEYS.ASSESSMENTS, JSON.stringify([SEED_ASSESSMENT]));
+  localStorage.setItem(STORAGE_KEYS.EXAM_VERSIONS, JSON.stringify(SEED_EXAM_VERSIONS));
   localStorage.setItem(STORAGE_KEYS.CANDIDATES, JSON.stringify(SEED_CANDIDATES));
   localStorage.setItem(STORAGE_KEYS.SESSIONS, JSON.stringify(SEED_SESSIONS));
   fetch('/api/data', {

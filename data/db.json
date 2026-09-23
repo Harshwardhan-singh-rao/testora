@@ -1,16 +1,18 @@
 {
   "assessment": {
-    "id": "asmnt-davidjcnm07-gmail-com",
-    "title": "davidjcnm07's Recruitment Assessment",
+    "id": "asmnt-tech-club-2026",
+    "adminEmail": "harshrao8058@gmail.com",
+    "title": "AUH TechXAI Recruitment Assessment",
     "clubName": "Admin Portal",
     "description": "Comprehensive remote assessment evaluating algorithm fundamentals, systems architecture, web performance, and problem-solving resilience.",
     "durationMinutes": 40,
-    "linkExpiresAt": "2026-09-23T20:14:19.804Z",
+    "linkExpiresAt": "2026-09-24T13:15:29.842Z",
     "passingPercentage": 70,
     "status": "PUBLISHED",
     "isRandomized": true,
-    "sharableToken": "link-davidjcnm07gmailcom-7891",
+    "sharableToken": "live-test-link",
     "createdAt": "2026-09-20T10:00:00Z",
+    "currentVersionId": "version-1",
     "integritySettings": {
       "strictBlockMode": true,
       "trackFocus": true,
@@ -18,143 +20,407 @@
       "trackClipboard": true,
       "enableWatermark": true,
       "allowCopyPaste": false
-    },
-    "questions": [
-      {
-        "id": "q1",
-        "prompt": "Which data structure enforces Last-In-First-Out (LIFO) order for insertion and deletion?",
-        "type": "mcq",
-        "options": [
-          "Queue",
-          "Stack",
-          "Linked List",
-          "Binary Heap"
-        ],
-        "correctAnswers": [
-          "Stack"
-        ],
-        "marks": 5,
-        "difficulty": "Easy",
-        "skillTag": "Data Structures",
-        "explanation": "A Stack processes elements in LIFO order using push and pop operations."
-      },
-      {
-        "id": "q2",
-        "prompt": "What is the average time complexity of searching for an element in a balanced Binary Search Tree (BST)?",
-        "type": "mcq",
-        "options": [
-          "O(1)",
-          "O(n)",
-          "O(log n)",
-          "O(n log n)"
-        ],
-        "correctAnswers": [
-          "O(log n)"
-        ],
-        "marks": 5,
-        "difficulty": "Easy",
-        "skillTag": "Algorithms",
-        "explanation": "In a balanced BST, halving the search space at each node yields O(log n) performance."
-      },
-      {
-        "id": "q3",
-        "prompt": "Select all standard React Hooks provided out-of-the-box by React:",
-        "type": "multiple_select",
-        "options": [
-          "useState",
-          "useSelect",
-          "useEffect",
-          "useMemo",
-          "useDatabase"
-        ],
-        "correctAnswers": [
-          "useState",
-          "useEffect",
-          "useMemo"
-        ],
-        "marks": 5,
-        "difficulty": "Medium",
-        "skillTag": "Frontend Architecture",
-        "explanation": "useState, useEffect, and useMemo are standard React hooks built into React."
-      },
-      {
-        "id": "q4",
-        "prompt": "True or False: REST APIs require continuous WebSocket TCP connections to send JSON payloads.",
-        "type": "true_false",
-        "options": [
-          "True",
-          "False"
-        ],
-        "correctAnswers": [
-          "False"
-        ],
-        "marks": 5,
-        "difficulty": "Easy",
-        "skillTag": "Networking",
-        "explanation": "REST operates over HTTP/HTTPS stateless request-response cycles, not persistent WebSockets."
-      },
-      {
-        "id": "q5",
-        "prompt": "Explain the key distinction between a process and a thread in operating systems, specifically regarding memory sharing.",
-        "type": "short_answer",
-        "rubric": {
-          "criteria": "Must mention memory space separation for processes vs shared memory address space among threads of the same process.",
-          "maxMarks": 10,
-          "keywords": [
-            "memory",
-            "address space",
-            "shared",
-            "isolation",
-            "context switch"
-          ]
-        },
-        "marks": 10,
-        "difficulty": "Medium",
-        "skillTag": "Operating Systems"
-      },
-      {
-        "id": "q6",
-        "prompt": "How does optimistic concurrency control differ from pessimistic concurrency control in high-throughput database systems?",
-        "type": "short_answer",
-        "rubric": {
-          "criteria": "Must explain lock-less validation/versioning at commit time (optimistic) vs locking resources beforehand (pessimistic).",
-          "maxMarks": 10,
-          "keywords": [
-            "lock",
-            "version",
-            "commit",
-            "validation",
-            "conflict",
-            "rollback"
-          ]
-        },
-        "marks": 10,
-        "difficulty": "Medium",
-        "skillTag": "Databases"
-      },
-      {
-        "id": "q7",
-        "prompt": "Design scenario: You need to implement a high-performance rate limiter handling 20,000 requests per second across microservices. Describe your choice of data structure/store (e.g. Redis Leaky Bucket/Sliding Window) and how you minimize latency.",
-        "type": "scenario",
-        "rubric": {
-          "criteria": "Evaluates choice of distributed key-value store (e.g., Redis), algorithm choice (sliding window / token bucket / leaky bucket), and handling race conditions (Lua scripts / atomic counters).",
-          "maxMarks": 10,
-          "keywords": [
-            "redis",
-            "token bucket",
-            "sliding window",
-            "lua",
-            "atomic",
-            "latency"
-          ]
-        },
-        "marks": 10,
-        "difficulty": "Hard",
-        "skillTag": "System Design"
-      }
-    ],
-    "adminEmail": "davidjcnm07@gmail.com"
+    }
   },
+  "assessments": [
+    {
+      "id": "asmnt-tech-club-2026",
+      "adminEmail": "harshrao8058@gmail.com",
+      "title": "AUH TechXAI Recruitment Assessment",
+      "clubName": "Admin Portal",
+      "description": "Comprehensive remote assessment evaluating algorithm fundamentals, systems architecture, web performance, and problem-solving resilience.",
+      "durationMinutes": 40,
+      "linkExpiresAt": "2026-09-24T13:15:29.842Z",
+      "passingPercentage": 70,
+      "status": "PUBLISHED",
+      "isRandomized": true,
+      "sharableToken": "live-test-link",
+      "createdAt": "2026-09-20T10:00:00Z",
+      "currentVersionId": "version-1",
+      "integritySettings": {
+        "strictBlockMode": true,
+        "trackFocus": true,
+        "trackFullscreen": true,
+        "trackClipboard": true,
+        "enableWatermark": true,
+        "allowCopyPaste": false
+      }
+    }
+  ],
+  "examVersions": [
+    {
+      "id": "version-1",
+      "examId": "asmnt-tech-club-2026",
+      "versionNumber": 1,
+      "status": "PUBLISHED",
+      "createdAt": "2026-09-20T10:00:00Z",
+      "questions": [
+        {
+          "id": "q1",
+          "examVersionId": "version-1",
+          "prompt": "An Event Manager should communicate schedule changes to participants as soon as possible, rather than assuming everyone will hear about them.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "True"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Event Management",
+          "explanation": "Proactive communication is essential for effective event management."
+        },
+        {
+          "id": "q2",
+          "examVersionId": "version-1",
+          "prompt": "A Secretary's responsibility ends once the event is completed, so maintaining post-event records is unnecessary.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "False"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Administration",
+          "explanation": "Post-event records are essential for accountability and future reference."
+        },
+        {
+          "id": "q3",
+          "examVersionId": "version-1",
+          "prompt": "If a technical issue affects one team during a competition, the organising team should follow the announced rules and handle the situation consistently and fairly.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "True"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Fair Play",
+          "explanation": "Consistency and fairness are foundational to credible event management."
+        },
+        {
+          "id": "q4",
+          "examVersionId": "version-1",
+          "prompt": "A club office bearer should prioritise personal recognition over the successful execution of the team's activities.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "False"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Leadership",
+          "explanation": "Team success should always take priority over personal recognition."
+        },
+        {
+          "id": "q5",
+          "examVersionId": "version-1",
+          "prompt": "A TechXAI event can include students with different levels of technical knowledge, provided the activities are designed to encourage participation and learning.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "True"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Inclusivity",
+          "explanation": "Inclusive event design encourages broader participation and learning."
+        },
+        {
+          "id": "q6",
+          "examVersionId": "version-1",
+          "prompt": "If an event receives fewer registrations than expected, the Event Manager should immediately cancel it without consulting the team.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "False"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Decision Making",
+          "explanation": "Decisions should be made collaboratively, not unilaterally."
+        },
+        {
+          "id": "q7",
+          "examVersionId": "version-1",
+          "prompt": "A Secretary should maintain accurate meeting minutes, including important decisions, assigned responsibilities and deadlines.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "True"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Administration",
+          "explanation": "Accurate documentation is a core secretarial responsibility."
+        },
+        {
+          "id": "q8",
+          "examVersionId": "version-1",
+          "prompt": "If a participant is a personal friend of an office bearer, they may be given an advantage over other participants without any official approval.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "False"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Ethics",
+          "explanation": "Favouritism undermines fairness and credibility of the event."
+        },
+        {
+          "id": "q9",
+          "examVersionId": "version-1",
+          "prompt": "During event planning, identifying possible risks and preparing backup arrangements can help the organising team respond to unexpected situations.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "True"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Risk Management",
+          "explanation": "Risk assessment and contingency planning are critical for successful events."
+        },
+        {
+          "id": "q10",
+          "examVersionId": "version-1",
+          "prompt": "An office bearer should be willing to accept feedback and make improvements, even when the feedback challenges their original approach.",
+          "type": "true_false",
+          "options": [
+            "True",
+            "False"
+          ],
+          "correctAnswers": [
+            "True"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Leadership",
+          "explanation": "Openness to feedback is a hallmark of effective leadership."
+        },
+        {
+          "id": "q11",
+          "examVersionId": "version-1",
+          "prompt": "You are the Event Manager of AUH TechXAI. During a live AI competition, the event platform crashes, two teams dispute the judging decision, and the next round is scheduled to begin in 5 minutes. How would you handle the situation while ensuring fairness, effective coordination and minimal disruption to the event?",
+          "type": "scenario",
+          "rubric": {
+            "criteria": "Assess the candidate's ability to prioritise issues, coordinate with the technical team and judges, implement a practical backup plan, communicate transparently, and maintain fairness without making unauthorised decisions.",
+            "maxMarks": 5,
+            "keywords": [
+              "incident prioritisation",
+              "technical backup plan",
+              "fair judging",
+              "team coordination",
+              "transparent communication",
+              "time management",
+              "accountability"
+            ]
+          },
+          "marks": 5,
+          "difficulty": "Hard",
+          "skillTag": "Crisis Management"
+        },
+        {
+          "id": "q12",
+          "examVersionId": "version-1",
+          "prompt": "The event projector suddenly stops working. What should you do first?",
+          "type": "mcq",
+          "options": [
+            "Cancel the event",
+            "Activate the backup plan",
+            "Ignore the issue",
+            "Blame the technical team"
+          ],
+          "correctAnswers": [
+            "Activate the backup plan"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Problem Solving",
+          "explanation": "Activating a backup plan is the appropriate first response to technical failures."
+        },
+        {
+          "id": "q13",
+          "examVersionId": "version-1",
+          "prompt": "Two teams dispute a judging decision. What should you do?",
+          "type": "mcq",
+          "options": [
+            "Support the louder team",
+            "Change the result immediately",
+            "Refer to the announced criteria and consult the judges",
+            "Let the audience decide"
+          ],
+          "correctAnswers": [
+            "Refer to the announced criteria and consult the judges"
+          ],
+          "marks": 1,
+          "difficulty": "Medium",
+          "skillTag": "Conflict Resolution",
+          "explanation": "Following established criteria ensures fair and transparent conflict resolution."
+        },
+        {
+          "id": "q14",
+          "examVersionId": "version-1",
+          "prompt": "Registrations exceed the venue capacity. What is your priority?",
+          "type": "mcq",
+          "options": [
+            "Admit everyone regardless of safety",
+            "Follow the approved capacity and registration policy",
+            "Allow only your friends inside",
+            "Close registration without informing anyone"
+          ],
+          "correctAnswers": [
+            "Follow the approved capacity and registration policy"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Safety & Policy",
+          "explanation": "Safety regulations and established policies must always be followed."
+        },
+        {
+          "id": "q15",
+          "examVersionId": "version-1",
+          "prompt": "A volunteer fails to complete an important task before the event. What should you do?",
+          "type": "mcq",
+          "options": [
+            "Publicly insult the volunteer",
+            "Ignore the unfinished task",
+            "Reassign the task, coordinate support and address accountability afterward",
+            "Cancel the entire event"
+          ],
+          "correctAnswers": [
+            "Reassign the task, coordinate support and address accountability afterward"
+          ],
+          "marks": 1,
+          "difficulty": "Medium",
+          "skillTag": "Team Management",
+          "explanation": "Constructive problem-solving and post-event accountability are best practices."
+        },
+        {
+          "id": "q16",
+          "examVersionId": "version-1",
+          "prompt": "A sponsor requests extra stage time during a tightly scheduled competition. What should you do?",
+          "type": "mcq",
+          "options": [
+            "Approve it immediately",
+            "Reject it without discussion",
+            "Check commitments, consult the coordinator and adjust only if feasible",
+            "Ask participants to vote"
+          ],
+          "correctAnswers": [
+            "Check commitments, consult the coordinator and adjust only if feasible"
+          ],
+          "marks": 1,
+          "difficulty": "Medium",
+          "skillTag": "Stakeholder Management",
+          "explanation": "Balanced decision-making involves checking commitments and consulting relevant parties."
+        },
+        {
+          "id": "q17",
+          "examVersionId": "version-1",
+          "prompt": "An AI chatbot gives a convincing but incorrect answer. What is this commonly called?",
+          "type": "mcq",
+          "options": [
+            "Encryption",
+            "AI hallucination",
+            "Data backup",
+            "Cloud hosting"
+          ],
+          "correctAnswers": [
+            "AI hallucination"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "AI Literacy",
+          "explanation": "AI hallucination refers to when AI models generate plausible but factually incorrect outputs."
+        },
+        {
+          "id": "q18",
+          "examVersionId": "version-1",
+          "prompt": "Which is a responsible way to use AI when preparing event promotional content?",
+          "type": "mcq",
+          "options": [
+            "Publish everything without checking",
+            "Copy another club's content and claim it as original",
+            "Review the output, verify details and ensure originality",
+            "Enter confidential participant data into any AI tool"
+          ],
+          "correctAnswers": [
+            "Review the output, verify details and ensure originality"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "AI Ethics",
+          "explanation": "Responsible AI use requires reviewing outputs and ensuring originality."
+        },
+        {
+          "id": "q19",
+          "examVersionId": "version-1",
+          "prompt": "Your team rejects your event idea. What would you most likely do?",
+          "type": "mcq",
+          "options": [
+            "Stop contributing",
+            "Insist that your idea must be accepted",
+            "Listen to feedback, improve the idea and discuss alternatives",
+            "Blame the team"
+          ],
+          "correctAnswers": [
+            "Listen to feedback, improve the idea and discuss alternatives"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Teamwork",
+          "explanation": "Listening to feedback and collaborating on improvements demonstrates maturity."
+        },
+        {
+          "id": "q20",
+          "examVersionId": "version-1",
+          "prompt": "You realise you made a mistake in an official event announcement. What would you do?",
+          "type": "mcq",
+          "options": [
+            "Hide the mistake",
+            "Blame another team member",
+            "Correct it promptly and communicate the update clearly",
+            "Wait until someone complains"
+          ],
+          "correctAnswers": [
+            "Correct it promptly and communicate the update clearly"
+          ],
+          "marks": 1,
+          "difficulty": "Easy",
+          "skillTag": "Accountability",
+          "explanation": "Prompt correction and clear communication demonstrate professional accountability."
+        }
+      ]
+    }
+  ],
   "candidates": [
     {
       "id": "cand-alex-01",
@@ -175,32 +441,14 @@
       "invitedAt": "2026-09-21T09:15:00Z"
     },
     {
-      "id": "cand-live-1790096822450",
-      "name": "hii",
-      "email": "harshrao@gmail.com",
-      "invitationToken": "live-test-link",
-      "assessmentId": "asmnt-tech-club-2026",
-      "status": "SUBMITTED",
-      "invitedAt": "2026-09-22T17:07:02.450Z"
-    },
-    {
-      "id": "cand-live-1790096888529",
-      "name": "helo",
-      "email": "helo@candidate.com",
+      "id": "cand-live-1790169391371",
+      "adminEmail": "harshrao8058@gmail.com",
+      "name": "Harsh Rao -333",
+      "email": "harshrao0000@gmail.com",
       "invitationToken": "live-test-link",
       "assessmentId": "asmnt-tech-club-2026",
       "status": "BLOCKED",
-      "invitedAt": "2026-09-22T17:08:08.529Z"
-    },
-    {
-      "id": "cand-live-1790107450928",
-      "adminEmail": "admin@testora.com",
-      "name": "Rahul",
-      "email": "rahul@candidate.com",
-      "invitationToken": "link-harshrao8058gmailcom-6287",
-      "assessmentId": "asmnt-tech-club-2026",
-      "status": "SUBMITTED",
-      "invitedAt": "2026-09-22T20:04:10.928Z"
+      "invitedAt": "2026-09-23T13:16:31.371Z"
     }
   ],
   "sessions": [
@@ -208,326 +456,257 @@
       "id": "sess-alex-01",
       "candidateId": "cand-alex-01",
       "assessmentId": "asmnt-tech-club-2026",
+      "examVersionId": "version-1",
+      "status": "SUBMITTED",
       "startedAt": "2026-09-21T10:00:00Z",
       "submittedAt": "2026-09-21T10:32:15Z",
       "expiresAt": "2026-09-21T10:40:00Z",
-      "objectiveScore": 20,
-      "subjectiveScore": 26,
-      "maxScore": 50,
-      "totalScore": 46,
+      "objectiveScore": 19,
+      "subjectiveScore": 4,
+      "maxScore": 24,
+      "totalScore": 23,
       "reviewStatus": "CLEAN",
       "finalDecision": "ACCEPTED",
-      "reviewerNotes": "Excellent grasp of system design and OS primitives.",
+      "reviewerNotes": "Excellent understanding of event management and leadership principles.",
       "answers": {
         "q1": {
+          "id": "ans-1",
+          "attemptId": "sess-alex-01",
           "questionId": "q1",
-          "candidateResponse": "Stack",
+          "candidateResponse": "True",
           "savedAt": "2026-09-21T10:02:00Z",
           "isAutosaved": true
         },
         "q2": {
+          "id": "ans-2",
+          "attemptId": "sess-alex-01",
           "questionId": "q2",
-          "candidateResponse": "O(log n)",
-          "savedAt": "2026-09-21T10:04:12Z",
+          "candidateResponse": "False",
+          "savedAt": "2026-09-21T10:03:00Z",
           "isAutosaved": true
         },
         "q3": {
+          "id": "ans-3",
+          "attemptId": "sess-alex-01",
           "questionId": "q3",
-          "candidateResponse": [
-            "useState",
-            "useEffect",
-            "useMemo"
-          ],
-          "savedAt": "2026-09-21T10:08:30Z",
+          "candidateResponse": "True",
+          "savedAt": "2026-09-21T10:04:00Z",
           "isAutosaved": true
         },
         "q4": {
+          "id": "ans-4",
+          "attemptId": "sess-alex-01",
           "questionId": "q4",
           "candidateResponse": "False",
-          "savedAt": "2026-09-21T10:10:00Z",
+          "savedAt": "2026-09-21T10:05:00Z",
           "isAutosaved": true
         },
         "q5": {
+          "id": "ans-5",
+          "attemptId": "sess-alex-01",
           "questionId": "q5",
-          "candidateResponse": "A process is an isolated execution unit with private memory address space. Threads belong to a process and share memory space.",
-          "savedAt": "2026-09-21T10:18:40Z",
+          "candidateResponse": "True",
+          "savedAt": "2026-09-21T10:06:00Z",
           "isAutosaved": true
         },
         "q6": {
+          "id": "ans-6",
+          "attemptId": "sess-alex-01",
           "questionId": "q6",
-          "candidateResponse": "Pessimistic concurrency locks data upfront. Optimistic concurrency validates version counters upon commit.",
-          "savedAt": "2026-09-21T10:25:10Z",
+          "candidateResponse": "False",
+          "savedAt": "2026-09-21T10:07:00Z",
           "isAutosaved": true
         },
         "q7": {
+          "id": "ans-7",
+          "attemptId": "sess-alex-01",
           "questionId": "q7",
-          "candidateResponse": "Redis cluster with a Sliding Window algorithm via Lua scripts for atomic updates.",
-          "savedAt": "2026-09-21T10:31:00Z",
+          "candidateResponse": "True",
+          "savedAt": "2026-09-21T10:08:00Z",
+          "isAutosaved": true
+        },
+        "q8": {
+          "id": "ans-8",
+          "attemptId": "sess-alex-01",
+          "questionId": "q8",
+          "candidateResponse": "False",
+          "savedAt": "2026-09-21T10:09:00Z",
+          "isAutosaved": true
+        },
+        "q9": {
+          "id": "ans-9",
+          "attemptId": "sess-alex-01",
+          "questionId": "q9",
+          "candidateResponse": "True",
+          "savedAt": "2026-09-21T10:10:00Z",
+          "isAutosaved": true
+        },
+        "q10": {
+          "id": "ans-10",
+          "attemptId": "sess-alex-01",
+          "questionId": "q10",
+          "candidateResponse": "True",
+          "savedAt": "2026-09-21T10:11:00Z",
+          "isAutosaved": true
+        },
+        "q11": {
+          "id": "ans-11",
+          "attemptId": "sess-alex-01",
+          "questionId": "q11",
+          "candidateResponse": "First, I would prioritise the platform crash by coordinating with the technical team to activate a backup system. Simultaneously, I would ask the judges to review the dispute based on announced criteria. I would communicate transparently with all participants about a brief delay and adjust the schedule accordingly.",
+          "savedAt": "2026-09-21T10:20:00Z",
+          "isAutosaved": true
+        },
+        "q12": {
+          "id": "ans-12",
+          "attemptId": "sess-alex-01",
+          "questionId": "q12",
+          "candidateResponse": "Activate the backup plan",
+          "savedAt": "2026-09-21T10:22:00Z",
+          "isAutosaved": true
+        },
+        "q13": {
+          "id": "ans-13",
+          "attemptId": "sess-alex-01",
+          "questionId": "q13",
+          "candidateResponse": "Refer to the announced criteria and consult the judges",
+          "savedAt": "2026-09-21T10:23:00Z",
+          "isAutosaved": true
+        },
+        "q14": {
+          "id": "ans-14",
+          "attemptId": "sess-alex-01",
+          "questionId": "q14",
+          "candidateResponse": "Follow the approved capacity and registration policy",
+          "savedAt": "2026-09-21T10:24:00Z",
+          "isAutosaved": true
+        },
+        "q15": {
+          "id": "ans-15",
+          "attemptId": "sess-alex-01",
+          "questionId": "q15",
+          "candidateResponse": "Reassign the task, coordinate support and address accountability afterward",
+          "savedAt": "2026-09-21T10:25:00Z",
+          "isAutosaved": true
+        },
+        "q16": {
+          "id": "ans-16",
+          "attemptId": "sess-alex-01",
+          "questionId": "q16",
+          "candidateResponse": "Check commitments, consult the coordinator and adjust only if feasible",
+          "savedAt": "2026-09-21T10:26:00Z",
+          "isAutosaved": true
+        },
+        "q17": {
+          "id": "ans-17",
+          "attemptId": "sess-alex-01",
+          "questionId": "q17",
+          "candidateResponse": "AI hallucination",
+          "savedAt": "2026-09-21T10:27:00Z",
+          "isAutosaved": true
+        },
+        "q18": {
+          "id": "ans-18",
+          "attemptId": "sess-alex-01",
+          "questionId": "q18",
+          "candidateResponse": "Review the output, verify details and ensure originality",
+          "savedAt": "2026-09-21T10:28:00Z",
+          "isAutosaved": true
+        },
+        "q19": {
+          "id": "ans-19",
+          "attemptId": "sess-alex-01",
+          "questionId": "q19",
+          "candidateResponse": "Listen to feedback, improve the idea and discuss alternatives",
+          "savedAt": "2026-09-21T10:29:00Z",
+          "isAutosaved": true
+        },
+        "q20": {
+          "id": "ans-20",
+          "attemptId": "sess-alex-01",
+          "questionId": "q20",
+          "candidateResponse": "Correct it promptly and communicate the update clearly",
+          "savedAt": "2026-09-21T10:30:00Z",
           "isAutosaved": true
         }
       },
       "integrityEvents": [
         {
           "id": "evt-1",
+          "attemptId": "sess-alex-01",
           "type": "FULLSCREEN_ENTER",
           "timestamp": "2026-09-21T10:00:05Z",
           "details": "Candidate initiated fullscreen assessment."
         }
       ],
       "evaluations": {
-        "q5": {
-          "questionId": "q5",
-          "score": 9,
-          "maxScore": 10,
-          "rubricFeedback": "Clear distinction between process isolation and thread memory sharing.",
-          "confidence": "High",
-          "evaluator": "AI Rubric Engine"
-        },
-        "q6": {
-          "questionId": "q6",
-          "score": 9,
-          "maxScore": 10,
-          "rubricFeedback": "Accurate explanation of lock vs version validation.",
-          "confidence": "High",
-          "evaluator": "AI Rubric Engine"
-        },
-        "q7": {
-          "questionId": "q7",
-          "score": 8,
-          "maxScore": 10,
-          "rubricFeedback": "Well structured architectural choice (Redis + Lua).",
+        "q11": {
+          "questionId": "q11",
+          "score": 4,
+          "maxScore": 5,
+          "rubricFeedback": "Good crisis prioritisation and communication approach. Could expand on specific backup plan details.",
           "confidence": "High",
           "evaluator": "AI Rubric Engine"
         }
       }
     },
     {
-      "id": "sess-cand-live-1790096822450",
-      "candidateId": "cand-live-1790096822450",
-      "candidateName": "hii",
-      "candidateEmail": "harshrao@gmail.com",
+      "id": "sess-cand-live-1790169391371",
+      "adminEmail": "harshrao8058@gmail.com",
+      "candidateId": "cand-live-1790169391371",
+      "candidateName": "Harsh Rao -333",
+      "candidateEmail": "harshrao0000@gmail.com",
       "assessmentId": "asmnt-tech-club-2026",
-      "startedAt": "2026-09-22T17:07:11.634Z",
-      "expiresAt": "2026-09-22T17:47:11.634Z",
+      "examVersionId": "version-1",
+      "status": "IN_PROGRESS",
+      "startedAt": "2026-09-23T13:16:32.905Z",
+      "expiresAt": "2026-09-23T13:56:32.905Z",
       "answers": {
-        "q1": {
-          "questionId": "q1",
-          "candidateResponse": "Linked List",
-          "savedAt": "2026-09-22T17:07:12.910Z",
+        "q18": {
+          "id": "ans-sess-cand-live-1790169391371-q18",
+          "attemptId": "sess-cand-live-1790169391371",
+          "questionId": "q18",
+          "candidateResponse": "Enter confidential participant data into any AI tool",
+          "savedAt": "2026-09-23T13:16:36.788Z",
           "isAutosaved": true
         },
-        "q2": {
-          "questionId": "q2",
-          "candidateResponse": "O(log n)",
-          "savedAt": "2026-09-22T17:07:14.671Z",
+        "q19": {
+          "id": "ans-sess-cand-live-1790169391371-q19",
+          "attemptId": "sess-cand-live-1790169391371",
+          "questionId": "q19",
+          "candidateResponse": "Listen to feedback, improve the idea and discuss alternatives",
+          "savedAt": "2026-09-23T13:16:37.887Z",
           "isAutosaved": true
         },
-        "q3": {
-          "questionId": "q3",
-          "candidateResponse": [
-            "useEffect"
-          ],
-          "savedAt": "2026-09-22T17:07:18.391Z",
-          "isAutosaved": true
-        },
-        "q4": {
-          "questionId": "q4",
-          "candidateResponse": "False",
-          "savedAt": "2026-09-22T17:07:20.640Z",
-          "isAutosaved": true
-        },
-        "q5": {
-          "questionId": "q5",
-          "candidateResponse": "oiuytre",
-          "savedAt": "2026-09-22T17:07:23.439Z",
-          "isAutosaved": true
-        },
-        "q6": {
-          "questionId": "q6",
-          "candidateResponse": "ytrewq",
-          "savedAt": "2026-09-22T17:07:26.399Z",
-          "isAutosaved": true
-        },
-        "q7": {
-          "questionId": "q7",
-          "candidateResponse": "ytrew",
-          "savedAt": "2026-09-22T17:07:30.095Z",
+        "q20": {
+          "id": "ans-sess-cand-live-1790169391371-q20",
+          "attemptId": "sess-cand-live-1790169391371",
+          "questionId": "q20",
+          "candidateResponse": "Hide the mistake",
+          "savedAt": "2026-09-23T13:16:39.334Z",
           "isAutosaved": true
         }
       },
       "integrityEvents": [
         {
-          "id": "evt-1790096822450",
+          "id": "evt-enter-1790169391372",
+          "attemptId": "sess-cand-live-1790169391371",
           "type": "FULLSCREEN_ENTER",
-          "timestamp": "2026-09-22T17:07:02.450Z",
-          "details": "Candidate initiated assessment session."
-        }
-      ],
-      "reviewStatus": "CLEAN",
-      "submittedAt": "2026-09-22T17:07:33.453Z",
-      "objectiveScore": 10,
-      "subjectiveScore": 3,
-      "totalScore": 13,
-      "maxScore": 50,
-      "evaluations": {
-        "q5": {
-          "questionId": "q5",
-          "score": 1,
-          "maxScore": 10,
-          "rubricFeedback": "Answer provided (1 words), but lacks specific rubric keywords (memory, address space, shared, isolation, context switch).",
-          "confidence": "Low",
-          "evaluator": "AI Rubric Evaluator v1.2"
-        },
-        "q6": {
-          "questionId": "q6",
-          "score": 1,
-          "maxScore": 10,
-          "rubricFeedback": "Answer provided (1 words), but lacks specific rubric keywords (lock, version, commit, validation, conflict, rollback).",
-          "confidence": "Low",
-          "evaluator": "AI Rubric Evaluator v1.2"
-        },
-        "q7": {
-          "questionId": "q7",
-          "score": 1,
-          "maxScore": 10,
-          "rubricFeedback": "Answer provided (1 words), but lacks specific rubric keywords (redis, token bucket, sliding window, lua, atomic, latency).",
-          "confidence": "Low",
-          "evaluator": "AI Rubric Evaluator v1.2"
-        }
-      }
-    },
-    {
-      "id": "sess-cand-live-1790096888529",
-      "candidateId": "cand-live-1790096888529",
-      "candidateName": "helo",
-      "candidateEmail": "helo@candidate.com",
-      "assessmentId": "asmnt-tech-club-2026",
-      "startedAt": "2026-09-22T17:08:10.842Z",
-      "expiresAt": "2026-09-22T17:48:10.842Z",
-      "answers": {
-        "q1": {
-          "questionId": "q1",
-          "candidateResponse": "Binary Heap",
-          "savedAt": "2026-09-22T17:08:11.762Z",
-          "isAutosaved": true
-        }
-      },
-      "integrityEvents": [
-        {
-          "id": "evt-1790096888530",
-          "type": "FULLSCREEN_ENTER",
-          "timestamp": "2026-09-22T17:08:08.530Z",
+          "timestamp": "2026-09-23T13:16:31.372Z",
           "details": "Candidate initiated assessment session."
         },
         {
-          "id": "evt-block-1790096895781",
+          "id": "evt-block-1790169401352",
+          "attemptId": "sess-cand-live-1790169391371",
           "type": "BLOCKED_DISQUALIFIED",
-          "timestamp": "2026-09-22T17:08:15.781Z",
-          "details": "STRICT AUTO-BLOCK TRIGGERED: Switched browser tab or minimized window. Candidate session permanently terminated."
+          "timestamp": "2026-09-23T13:16:41.352Z",
+          "details": "STRICT AUTO-BLOCK TRIGGERED: Exited required fullscreen mode. Candidate session permanently terminated."
         }
       ],
       "reviewStatus": "BLOCKED_DISQUALIFIED",
       "isBlocked": true,
-      "blockedReason": "Switched browser tab or minimized window",
+      "blockedReason": "Exited required fullscreen mode",
       "finalDecision": "BLOCKED"
-    },
-    {
-      "id": "sess-cand-live-1790107450928",
-      "adminEmail": "admin@testora.com",
-      "candidateId": "cand-live-1790107450928",
-      "candidateName": "Rahul",
-      "candidateEmail": "rahul@candidate.com",
-      "assessmentId": "asmnt-tech-club-2026",
-      "startedAt": "2026-09-22T20:04:21.222Z",
-      "expiresAt": "2026-09-22T20:44:21.222Z",
-      "answers": {
-        "q1": {
-          "questionId": "q1",
-          "candidateResponse": "Stack",
-          "savedAt": "2026-09-22T20:04:24.172Z",
-          "isAutosaved": true
-        },
-        "q2": {
-          "questionId": "q2",
-          "candidateResponse": "O(log n)",
-          "savedAt": "2026-09-22T20:04:27.247Z",
-          "isAutosaved": true
-        },
-        "q3": {
-          "questionId": "q3",
-          "candidateResponse": [
-            "useEffect",
-            "useState",
-            "useMemo"
-          ],
-          "savedAt": "2026-09-22T20:04:30.734Z",
-          "isAutosaved": true
-        },
-        "q4": {
-          "questionId": "q4",
-          "candidateResponse": "False",
-          "savedAt": "2026-09-22T20:04:33.109Z",
-          "isAutosaved": true
-        },
-        "q5": {
-          "questionId": "q5",
-          "candidateResponse": "pass",
-          "savedAt": "2026-09-22T20:04:35.216Z",
-          "isAutosaved": true
-        },
-        "q6": {
-          "questionId": "q6",
-          "candidateResponse": "pass",
-          "savedAt": "2026-09-22T20:04:37.746Z",
-          "isAutosaved": true
-        },
-        "q7": {
-          "questionId": "q7",
-          "candidateResponse": "pass",
-          "savedAt": "2026-09-22T20:04:39.619Z",
-          "isAutosaved": true
-        }
-      },
-      "integrityEvents": [
-        {
-          "id": "evt-1790107450929",
-          "type": "FULLSCREEN_ENTER",
-          "timestamp": "2026-09-22T20:04:10.929Z",
-          "details": "Candidate initiated assessment session."
-        }
-      ],
-      "reviewStatus": "CLEAN",
-      "submittedAt": "2026-09-22T20:04:41.678Z",
-      "objectiveScore": 20,
-      "subjectiveScore": 3,
-      "totalScore": 23,
-      "maxScore": 50,
-      "evaluations": {
-        "q5": {
-          "questionId": "q5",
-          "score": 1,
-          "maxScore": 10,
-          "rubricFeedback": "Answer provided (1 words), but lacks specific rubric keywords (memory, address space, shared, isolation, context switch).",
-          "confidence": "Low",
-          "evaluator": "AI Rubric Evaluator v1.2"
-        },
-        "q6": {
-          "questionId": "q6",
-          "score": 1,
-          "maxScore": 10,
-          "rubricFeedback": "Answer provided (1 words), but lacks specific rubric keywords (lock, version, commit, validation, conflict, rollback).",
-          "confidence": "Low",
-          "evaluator": "AI Rubric Evaluator v1.2"
-        },
-        "q7": {
-          "questionId": "q7",
-          "score": 1,
-          "maxScore": 10,
-          "rubricFeedback": "Answer provided (1 words), but lacks specific rubric keywords (redis, token bucket, sliding window, lua, atomic, latency).",
-          "confidence": "Low",
-          "evaluator": "AI Rubric Evaluator v1.2"
-        }
-      }
     }
   ],
   "adminUsers": [
@@ -539,493 +718,6 @@
       "role": "SUPER_ADMIN",
       "status": "APPROVED",
       "createdAt": "2026-09-20T10:00:00Z"
-    },
-    {
-      "id": "admin-1790104806974",
-      "name": "Laksh Sutle",
-      "email": "incrediblebot2005@gmail.com",
-      "password": "Lakshsutle@2005",
-      "role": "ADMIN",
-      "status": "PENDING_APPROVAL",
-      "createdAt": "2026-09-22T19:20:06.974Z"
-    },
-    {
-      "id": "admin-1790108017774",
-      "name": "David Bunga",
-      "email": "davidjcnm07@gmail.com",
-      "password": "Dav@0073",
-      "role": "ADMIN",
-      "status": "APPROVED",
-      "createdAt": "2026-09-22T20:13:37.774Z"
-    }
-  ],
-  "assessments": [
-    {
-      "id": "asmnt-tech-club-2026",
-      "title": "Admin Portal",
-      "clubName": "Admin Portal",
-      "description": "Comprehensive remote assessment evaluating algorithm fundamentals, systems architecture, web performance, and problem-solving resilience.",
-      "durationMinutes": 40,
-      "linkExpiresAt": "2026-09-23T17:06:46.475Z",
-      "passingPercentage": 70,
-      "status": "PUBLISHED",
-      "isRandomized": true,
-      "sharableToken": "live-test-link",
-      "createdAt": "2026-09-20T10:00:00Z",
-      "integritySettings": {
-        "strictBlockMode": true,
-        "trackFocus": true,
-        "trackFullscreen": true,
-        "trackClipboard": true,
-        "enableWatermark": true,
-        "allowCopyPaste": false
-      },
-      "questions": [
-        {
-          "id": "q1",
-          "prompt": "Which data structure enforces Last-In-First-Out (LIFO) order for insertion and deletion?",
-          "type": "mcq",
-          "options": [
-            "Queue",
-            "Stack",
-            "Linked List",
-            "Binary Heap"
-          ],
-          "correctAnswers": [
-            "Stack"
-          ],
-          "marks": 5,
-          "difficulty": "Easy",
-          "skillTag": "Data Structures",
-          "explanation": "A Stack processes elements in LIFO order using push and pop operations."
-        },
-        {
-          "id": "q2",
-          "prompt": "What is the average time complexity of searching for an element in a balanced Binary Search Tree (BST)?",
-          "type": "mcq",
-          "options": [
-            "O(1)",
-            "O(n)",
-            "O(log n)",
-            "O(n log n)"
-          ],
-          "correctAnswers": [
-            "O(log n)"
-          ],
-          "marks": 5,
-          "difficulty": "Easy",
-          "skillTag": "Algorithms",
-          "explanation": "In a balanced BST, halving the search space at each node yields O(log n) performance."
-        },
-        {
-          "id": "q3",
-          "prompt": "Select all standard React Hooks provided out-of-the-box by React:",
-          "type": "multiple_select",
-          "options": [
-            "useState",
-            "useSelect",
-            "useEffect",
-            "useMemo",
-            "useDatabase"
-          ],
-          "correctAnswers": [
-            "useState",
-            "useEffect",
-            "useMemo"
-          ],
-          "marks": 5,
-          "difficulty": "Medium",
-          "skillTag": "Frontend Architecture",
-          "explanation": "useState, useEffect, and useMemo are standard React hooks built into React."
-        },
-        {
-          "id": "q4",
-          "prompt": "True or False: REST APIs require continuous WebSocket TCP connections to send JSON payloads.",
-          "type": "true_false",
-          "options": [
-            "True",
-            "False"
-          ],
-          "correctAnswers": [
-            "False"
-          ],
-          "marks": 5,
-          "difficulty": "Easy",
-          "skillTag": "Networking",
-          "explanation": "REST operates over HTTP/HTTPS stateless request-response cycles, not persistent WebSockets."
-        },
-        {
-          "id": "q5",
-          "prompt": "Explain the key distinction between a process and a thread in operating systems, specifically regarding memory sharing.",
-          "type": "short_answer",
-          "rubric": {
-            "criteria": "Must mention memory space separation for processes vs shared memory address space among threads of the same process.",
-            "maxMarks": 10,
-            "keywords": [
-              "memory",
-              "address space",
-              "shared",
-              "isolation",
-              "context switch"
-            ]
-          },
-          "marks": 10,
-          "difficulty": "Medium",
-          "skillTag": "Operating Systems"
-        },
-        {
-          "id": "q6",
-          "prompt": "How does optimistic concurrency control differ from pessimistic concurrency control in high-throughput database systems?",
-          "type": "short_answer",
-          "rubric": {
-            "criteria": "Must explain lock-less validation/versioning at commit time (optimistic) vs locking resources beforehand (pessimistic).",
-            "maxMarks": 10,
-            "keywords": [
-              "lock",
-              "version",
-              "commit",
-              "validation",
-              "conflict",
-              "rollback"
-            ]
-          },
-          "marks": 10,
-          "difficulty": "Medium",
-          "skillTag": "Databases"
-        },
-        {
-          "id": "q7",
-          "prompt": "Design scenario: You need to implement a high-performance rate limiter handling 20,000 requests per second across microservices. Describe your choice of data structure/store (e.g. Redis Leaky Bucket/Sliding Window) and how you minimize latency.",
-          "type": "scenario",
-          "rubric": {
-            "criteria": "Evaluates choice of distributed key-value store (e.g., Redis), algorithm choice (sliding window / token bucket / leaky bucket), and handling race conditions (Lua scripts / atomic counters).",
-            "maxMarks": 10,
-            "keywords": [
-              "redis",
-              "token bucket",
-              "sliding window",
-              "lua",
-              "atomic",
-              "latency"
-            ]
-          },
-          "marks": 10,
-          "difficulty": "Hard",
-          "skillTag": "System Design"
-        }
-      ]
-    },
-    {
-      "id": "asmnt-harshrao8058-gmail-com",
-      "title": "harshrao8058's Recruitment Assessment",
-      "clubName": "Admin Portal",
-      "description": "Comprehensive remote assessment evaluating algorithm fundamentals, systems architecture, web performance, and problem-solving resilience.",
-      "durationMinutes": 40,
-      "linkExpiresAt": "2026-09-23T20:02:45.633Z",
-      "passingPercentage": 70,
-      "status": "PUBLISHED",
-      "isRandomized": true,
-      "sharableToken": "link-harshrao8058gmailcom-6287",
-      "createdAt": "2026-09-20T10:00:00Z",
-      "integritySettings": {
-        "strictBlockMode": true,
-        "trackFocus": true,
-        "trackFullscreen": true,
-        "trackClipboard": true,
-        "enableWatermark": true,
-        "allowCopyPaste": false
-      },
-      "questions": [
-        {
-          "id": "q1",
-          "prompt": "Which data structure enforces Last-In-First-Out (LIFO) order for insertion and deletion?",
-          "type": "mcq",
-          "options": [
-            "Queue",
-            "Stack",
-            "Linked List",
-            "Binary Heap"
-          ],
-          "correctAnswers": [
-            "Stack"
-          ],
-          "marks": 5,
-          "difficulty": "Easy",
-          "skillTag": "Data Structures",
-          "explanation": "A Stack processes elements in LIFO order using push and pop operations."
-        },
-        {
-          "id": "q2",
-          "prompt": "What is the average time complexity of searching for an element in a balanced Binary Search Tree (BST)?",
-          "type": "mcq",
-          "options": [
-            "O(1)",
-            "O(n)",
-            "O(log n)",
-            "O(n log n)"
-          ],
-          "correctAnswers": [
-            "O(log n)"
-          ],
-          "marks": 5,
-          "difficulty": "Easy",
-          "skillTag": "Algorithms",
-          "explanation": "In a balanced BST, halving the search space at each node yields O(log n) performance."
-        },
-        {
-          "id": "q3",
-          "prompt": "Select all standard React Hooks provided out-of-the-box by React:",
-          "type": "multiple_select",
-          "options": [
-            "useState",
-            "useSelect",
-            "useEffect",
-            "useMemo",
-            "useDatabase"
-          ],
-          "correctAnswers": [
-            "useState",
-            "useEffect",
-            "useMemo"
-          ],
-          "marks": 5,
-          "difficulty": "Medium",
-          "skillTag": "Frontend Architecture",
-          "explanation": "useState, useEffect, and useMemo are standard React hooks built into React."
-        },
-        {
-          "id": "q4",
-          "prompt": "True or False: REST APIs require continuous WebSocket TCP connections to send JSON payloads.",
-          "type": "true_false",
-          "options": [
-            "True",
-            "False"
-          ],
-          "correctAnswers": [
-            "False"
-          ],
-          "marks": 5,
-          "difficulty": "Easy",
-          "skillTag": "Networking",
-          "explanation": "REST operates over HTTP/HTTPS stateless request-response cycles, not persistent WebSockets."
-        },
-        {
-          "id": "q5",
-          "prompt": "Explain the key distinction between a process and a thread in operating systems, specifically regarding memory sharing.",
-          "type": "short_answer",
-          "rubric": {
-            "criteria": "Must mention memory space separation for processes vs shared memory address space among threads of the same process.",
-            "maxMarks": 10,
-            "keywords": [
-              "memory",
-              "address space",
-              "shared",
-              "isolation",
-              "context switch"
-            ]
-          },
-          "marks": 10,
-          "difficulty": "Medium",
-          "skillTag": "Operating Systems"
-        },
-        {
-          "id": "q6",
-          "prompt": "How does optimistic concurrency control differ from pessimistic concurrency control in high-throughput database systems?",
-          "type": "short_answer",
-          "rubric": {
-            "criteria": "Must explain lock-less validation/versioning at commit time (optimistic) vs locking resources beforehand (pessimistic).",
-            "maxMarks": 10,
-            "keywords": [
-              "lock",
-              "version",
-              "commit",
-              "validation",
-              "conflict",
-              "rollback"
-            ]
-          },
-          "marks": 10,
-          "difficulty": "Medium",
-          "skillTag": "Databases"
-        },
-        {
-          "id": "q7",
-          "prompt": "Design scenario: You need to implement a high-performance rate limiter handling 20,000 requests per second across microservices. Describe your choice of data structure/store (e.g. Redis Leaky Bucket/Sliding Window) and how you minimize latency.",
-          "type": "scenario",
-          "rubric": {
-            "criteria": "Evaluates choice of distributed key-value store (e.g., Redis), algorithm choice (sliding window / token bucket / leaky bucket), and handling race conditions (Lua scripts / atomic counters).",
-            "maxMarks": 10,
-            "keywords": [
-              "redis",
-              "token bucket",
-              "sliding window",
-              "lua",
-              "atomic",
-              "latency"
-            ]
-          },
-          "marks": 10,
-          "difficulty": "Hard",
-          "skillTag": "System Design"
-        }
-      ],
-      "adminEmail": "harshrao8058@gmail.com"
-    },
-    {
-      "id": "asmnt-davidjcnm07-gmail-com",
-      "title": "davidjcnm07's Recruitment Assessment",
-      "clubName": "Admin Portal",
-      "description": "Comprehensive remote assessment evaluating algorithm fundamentals, systems architecture, web performance, and problem-solving resilience.",
-      "durationMinutes": 40,
-      "linkExpiresAt": "2026-09-23T20:14:19.804Z",
-      "passingPercentage": 70,
-      "status": "PUBLISHED",
-      "isRandomized": true,
-      "sharableToken": "link-davidjcnm07gmailcom-7891",
-      "createdAt": "2026-09-20T10:00:00Z",
-      "integritySettings": {
-        "strictBlockMode": true,
-        "trackFocus": true,
-        "trackFullscreen": true,
-        "trackClipboard": true,
-        "enableWatermark": true,
-        "allowCopyPaste": false
-      },
-      "questions": [
-        {
-          "id": "q1",
-          "prompt": "Which data structure enforces Last-In-First-Out (LIFO) order for insertion and deletion?",
-          "type": "mcq",
-          "options": [
-            "Queue",
-            "Stack",
-            "Linked List",
-            "Binary Heap"
-          ],
-          "correctAnswers": [
-            "Stack"
-          ],
-          "marks": 5,
-          "difficulty": "Easy",
-          "skillTag": "Data Structures",
-          "explanation": "A Stack processes elements in LIFO order using push and pop operations."
-        },
-        {
-          "id": "q2",
-          "prompt": "What is the average time complexity of searching for an element in a balanced Binary Search Tree (BST)?",
-          "type": "mcq",
-          "options": [
-            "O(1)",
-            "O(n)",
-            "O(log n)",
-            "O(n log n)"
-          ],
-          "correctAnswers": [
-            "O(log n)"
-          ],
-          "marks": 5,
-          "difficulty": "Easy",
-          "skillTag": "Algorithms",
-          "explanation": "In a balanced BST, halving the search space at each node yields O(log n) performance."
-        },
-        {
-          "id": "q3",
-          "prompt": "Select all standard React Hooks provided out-of-the-box by React:",
-          "type": "multiple_select",
-          "options": [
-            "useState",
-            "useSelect",
-            "useEffect",
-            "useMemo",
-            "useDatabase"
-          ],
-          "correctAnswers": [
-            "useState",
-            "useEffect",
-            "useMemo"
-          ],
-          "marks": 5,
-          "difficulty": "Medium",
-          "skillTag": "Frontend Architecture",
-          "explanation": "useState, useEffect, and useMemo are standard React hooks built into React."
-        },
-        {
-          "id": "q4",
-          "prompt": "True or False: REST APIs require continuous WebSocket TCP connections to send JSON payloads.",
-          "type": "true_false",
-          "options": [
-            "True",
-            "False"
-          ],
-          "correctAnswers": [
-            "False"
-          ],
-          "marks": 5,
-          "difficulty": "Easy",
-          "skillTag": "Networking",
-          "explanation": "REST operates over HTTP/HTTPS stateless request-response cycles, not persistent WebSockets."
-        },
-        {
-          "id": "q5",
-          "prompt": "Explain the key distinction between a process and a thread in operating systems, specifically regarding memory sharing.",
-          "type": "short_answer",
-          "rubric": {
-            "criteria": "Must mention memory space separation for processes vs shared memory address space among threads of the same process.",
-            "maxMarks": 10,
-            "keywords": [
-              "memory",
-              "address space",
-              "shared",
-              "isolation",
-              "context switch"
-            ]
-          },
-          "marks": 10,
-          "difficulty": "Medium",
-          "skillTag": "Operating Systems"
-        },
-        {
-          "id": "q6",
-          "prompt": "How does optimistic concurrency control differ from pessimistic concurrency control in high-throughput database systems?",
-          "type": "short_answer",
-          "rubric": {
-            "criteria": "Must explain lock-less validation/versioning at commit time (optimistic) vs locking resources beforehand (pessimistic).",
-            "maxMarks": 10,
-            "keywords": [
-              "lock",
-              "version",
-              "commit",
-              "validation",
-              "conflict",
-              "rollback"
-            ]
-          },
-          "marks": 10,
-          "difficulty": "Medium",
-          "skillTag": "Databases"
-        },
-        {
-          "id": "q7",
-          "prompt": "Design scenario: You need to implement a high-performance rate limiter handling 20,000 requests per second across microservices. Describe your choice of data structure/store (e.g. Redis Leaky Bucket/Sliding Window) and how you minimize latency.",
-          "type": "scenario",
-          "rubric": {
-            "criteria": "Evaluates choice of distributed key-value store (e.g., Redis), algorithm choice (sliding window / token bucket / leaky bucket), and handling race conditions (Lua scripts / atomic counters).",
-            "maxMarks": 10,
-            "keywords": [
-              "redis",
-              "token bucket",
-              "sliding window",
-              "lua",
-              "atomic",
-              "latency"
-            ]
-          },
-          "marks": 10,
-          "difficulty": "Hard",
-          "skillTag": "System Design"
-        }
-      ],
-      "adminEmail": "davidjcnm07@gmail.com"
     }
   ]
 }

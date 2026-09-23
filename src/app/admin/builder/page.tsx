@@ -22,13 +22,14 @@ import {
   X
 } from 'lucide-react';
 import { getCurrentAdmin } from '@/lib/auth';
-import { getAssessment, saveAssessment } from '@/lib/storage';
+import { getAssessment, saveAssessment, getExamVersions, saveExamVersion } from '@/lib/storage';
 import { getAssessmentUrl } from '@/lib/url';
-import { Assessment, Question, QuestionType } from '@/types';
+import { Assessment, ExamVersion, Question, QuestionType } from '@/types';
 
 export default function AssessmentBuilderPage() {
   const router = useRouter();
   const [assessment, setAssessment] = useState<Assessment | null>(null);
+  const [examVersion, setExamVersion] = useState<ExamVersion | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [showDoneModal, setShowDoneModal] = useState(false);
   const [copiedModalLink, setCopiedModalLink] = useState(false);
@@ -42,9 +43,29 @@ export default function AssessmentBuilderPage() {
     const asmnt = getAssessment(active.email);
     if (!asmnt.adminEmail) asmnt.adminEmail = active.email;
     setAssessment(asmnt);
+
+    const versions = getExamVersions().filter(v => v.examId === asmnt.id);
+    let draft = versions.find(v => v.status === 'DRAFT');
+    
+    if (!draft) {
+      // If there's a published version, copy questions from it to a new draft
+      const published = asmnt.currentVersionId ? versions.find(v => v.id === asmnt.currentVersionId) : null;
+      const newVersionNum = versions.length + 1;
+      const newVersionId = `version-${newVersionNum}-${Date.now()}`;
+      
+      draft = {
+        id: newVersionId,
+        examId: asmnt.id,
+        versionNumber: newVersionNum,
+        status: 'DRAFT',
+        createdAt: new Date().toISOString(),
+        questions: published ? published.questions.map(q => ({ ...q, examVersionId: newVersionId, id: `q-${Date.now()}-${Math.random().toString(36).substr(2, 9)}` })) : []
+      };
+    }
+    setExamVersion(draft);
   }, [router]);
 
-  if (!assessment) return null;
+  if (!assessment || !examVersion) return null;
 
   const handleAssessmentMetaChange = (field: keyof Assessment, value: any) => {
     setAssessment({ ...assessment, [field]: value });
@@ -56,13 +77,13 @@ export default function AssessmentBuilderPage() {
   };
 
   const handleQuestionChange = (index: number, field: keyof Question, value: any) => {
-    const updatedQuestions = [...assessment.questions];
+    const updatedQuestions = [...examVersion.questions];
     updatedQuestions[index] = { ...updatedQuestions[index], [field]: value };
-    setAssessment({ ...assessment, questions: updatedQuestions });
+    setExamVersion({ ...examVersion, questions: updatedQuestions });
   };
 
   const handleRubricChange = (index: number, field: string, value: any) => {
-    const updatedQuestions = [...assessment.questions];
+    const updatedQuestions = [...examVersion.questions];
     const q = updatedQuestions[index];
     const rubric = q.rubric || { criteria: '', maxMarks: q.marks, keywords: [] };
 
@@ -78,12 +99,13 @@ export default function AssessmentBuilderPage() {
         rubric: { ...rubric, [field]: value },
       };
     }
-    setAssessment({ ...assessment, questions: updatedQuestions });
+    setExamVersion({ ...examVersion, questions: updatedQuestions });
   };
 
   const addQuestion = () => {
     const newQ: Question = {
       id: `q-${Date.now()}`,
+      examVersionId: examVersion.id,
       prompt: 'New Technical Question Prompt',
       type: 'mcq',
       options: ['Option A', 'Option B', 'Option C', 'Option D'],
@@ -92,26 +114,52 @@ export default function AssessmentBuilderPage() {
       difficulty: 'Medium',
       skillTag: 'General Systems',
     };
-    setAssessment({ ...assessment, questions: [...assessment.questions, newQ] });
+    setExamVersion({ ...examVersion, questions: [...examVersion.questions, newQ] });
   };
 
   const removeQuestion = (index: number) => {
-    if (assessment.questions.length <= 1) {
+    if (examVersion.questions.length <= 1) {
       alert('Assessment must contain at least one question.');
       return;
     }
-    const updated = assessment.questions.filter((_, i) => i !== index);
-    setAssessment({ ...assessment, questions: updated });
+    const updated = examVersion.questions.filter((_, i) => i !== index);
+    setExamVersion({ ...examVersion, questions: updated });
   };
 
   const handleSave = () => {
     saveAssessment(assessment);
+    saveExamVersion(examVersion);
     setSaveSuccess(true);
     setTimeout(() => setSaveSuccess(false), 3000);
   };
 
   const handleDone = () => {
-    saveAssessment(assessment);
+    // Publish the draft version
+    const publishedVersion: ExamVersion = {
+      ...examVersion,
+      status: 'PUBLISHED'
+    };
+    saveExamVersion(publishedVersion);
+
+    // Update assessment to point to this new version
+    const updatedAssessment: Assessment = {
+      ...assessment,
+      currentVersionId: publishedVersion.id
+    };
+    saveAssessment(updatedAssessment);
+    setAssessment(updatedAssessment);
+    
+    // Set a new draft based on this published version for future edits
+    const newDraft: ExamVersion = {
+      ...publishedVersion,
+      id: `version-${publishedVersion.versionNumber + 1}-${Date.now()}`,
+      versionNumber: publishedVersion.versionNumber + 1,
+      status: 'DRAFT',
+      createdAt: new Date().toISOString(),
+      questions: publishedVersion.questions.map(q => ({ ...q, examVersionId: `version-${publishedVersion.versionNumber + 1}-${Date.now()}`, id: `q-${Date.now()}-${Math.random().toString(36).substr(2, 9)}` }))
+    };
+    setExamVersion(newDraft);
+
     setSaveSuccess(true);
     setShowDoneModal(true);
   };
@@ -164,7 +212,7 @@ export default function AssessmentBuilderPage() {
             className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm shadow-lg shadow-emerald-600/20 transition cursor-pointer"
           >
             <Check className="h-4 w-4" />
-            Done (Get Test Link)
+            Publish New Version & Get Link
           </button>
         </div>
       </div>
@@ -266,8 +314,8 @@ export default function AssessmentBuilderPage() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-slate-900">Assessment Questions ({assessment.questions.length})</h2>
-            <p className="text-xs text-slate-500">Add objective MCQs or short-answer questions for the shared test link.</p>
+            <h2 className="text-xl font-bold text-slate-900">Assessment Questions ({examVersion.questions.length})</h2>
+            <p className="text-xs text-slate-500">Editing Draft Version {examVersion.versionNumber}. Add objective MCQs or short-answer questions for the shared test link.</p>
           </div>
           <button
             onClick={addQuestion}
@@ -278,7 +326,7 @@ export default function AssessmentBuilderPage() {
           </button>
         </div>
 
-        {assessment.questions.map((q, idx) => (
+        {examVersion.questions.map((q, idx) => (
           <div key={q.id} className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">
@@ -444,7 +492,7 @@ export default function AssessmentBuilderPage() {
       {/* Bottom Sticky Action Bar */}
       <div className="flex items-center justify-between bg-white border border-slate-200 p-4 rounded-2xl shadow-sm">
         <div className="text-xs text-slate-500 font-medium">
-          Total Questions: <strong className="text-slate-900">{assessment.questions.length}</strong> • Test Duration: <strong className="text-slate-900">{assessment.durationMinutes} mins</strong>
+          Total Questions: <strong className="text-slate-900">{examVersion.questions.length}</strong> • Test Duration: <strong className="text-slate-900">{assessment.durationMinutes} mins</strong>
         </div>
 
         <div className="flex items-center gap-3">
@@ -461,7 +509,7 @@ export default function AssessmentBuilderPage() {
             className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm shadow-lg transition cursor-pointer"
           >
             <Check className="h-4 w-4" />
-            Done (Save & Generate Link)
+            Done (Publish Version & Generate Link)
           </button>
         </div>
       </div>
@@ -481,9 +529,9 @@ export default function AssessmentBuilderPage() {
               <div className="h-16 w-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-inner">
                 <Check className="h-8 w-8 stroke-[3]" />
               </div>
-              <h2 className="text-2xl font-black text-slate-900 tracking-tight">Test Link Published!</h2>
+              <h2 className="text-2xl font-black text-slate-900 tracking-tight">Version Published!</h2>
               <p className="text-xs sm:text-sm text-slate-500">
-                All {assessment.questions.length} questions & {assessment.durationMinutes}-minute timer are live. Share this link with candidates:
+                All {examVersion.questions.length} questions & {assessment.durationMinutes}-minute timer are live. Share this link with candidates:
               </p>
             </div>
 
@@ -507,9 +555,9 @@ export default function AssessmentBuilderPage() {
             </div>
 
             <div className="p-3.5 rounded-xl bg-sky-50 border border-sky-200 text-xs text-sky-800 space-y-1">
-              <strong className="block text-sky-900">Admin Editing Note:</strong>
+              <strong className="block text-sky-900">Version Isolation Note:</strong>
               <p className="text-[11px] leading-relaxed">
-                You can return to the Question Builder anytime to add or update questions. Every change will automatically update live on this exact same link!
+                Future edits will create a new draft version. Candidates who have already started their attempt will remain locked to their specific exam version.
               </p>
             </div>
 
@@ -537,3 +585,4 @@ export default function AssessmentBuilderPage() {
     </div>
   );
 }
+

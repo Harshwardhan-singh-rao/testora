@@ -17,9 +17,9 @@ import {
   Ban,
   CalendarX
 } from 'lucide-react';
-import { getAssessment, getAllAssessments, getCandidates, saveCandidate, getSessions, saveSession, getSessionByCandidate } from '@/lib/storage';
+import { getAssessment, getAllAssessments, getExamVersions, getExamVersionById, getCandidates, saveCandidate, getSessions, saveSession, getSessionByCandidate, fetchServerData } from '@/lib/storage';
 import { calculateSessionScore } from '@/lib/scoring';
-import { Assessment, Candidate, Question, Session, IntegrityEvent } from '@/types';
+import { Assessment, ExamVersion, Candidate, Question, Session, IntegrityEvent } from '@/types';
 import { Watermark } from '@/components/Watermark';
 
 export default function CandidateAssessmentPage({ params }: { params: Promise<{ token: string }> }) {
@@ -29,6 +29,7 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
   const [step, setStep] = useState<'REGISTER' | 'SYSTEM_CHECK' | 'RULES' | 'TEST' | 'COMPLETED' | 'BLOCKED' | 'EXPIRED_LINK'>('REGISTER');
   const [candidate, setCandidate] = useState<Candidate | null>(null);
   const [assessment, setAssessment] = useState<Assessment | null>(null);
+  const [examVersion, setExamVersion] = useState<ExamVersion | null>(null);
   const [session, setSession] = useState<Session | null>(null);
 
   // Registration state
@@ -52,15 +53,9 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
     candidateRef.current = candidate;
   }, [step, session, candidate]);
 
-  // Check if candidate email or name is blocked in local storage
-  const isNameOrDeviceBlockedLocally = (candName?: string, candEmail?: string) => {
-    if (typeof window === 'undefined') return false;
-    const blockedEmails = JSON.parse(localStorage.getItem('clubselect_blocked_emails') || '[]');
-    const blockedNames = JSON.parse(localStorage.getItem('clubselect_blocked_names') || '[]');
-
-    if (candEmail && blockedEmails.includes(candEmail.trim().toLowerCase())) return true;
-    if (candName && blockedNames.includes(candName.trim().toLowerCase())) return true;
-    return false;
+  // Check if candidate is blocked (now rely solely on session block state)
+  const isCandidateBlockedLocally = () => {
+    return false; // Removed generic name/email based local storage blocking per architecture update
   };
 
   // Immediate Hard Block Trigger
@@ -69,28 +64,14 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
     isTestingRef.current = false;
 
     if (typeof window !== 'undefined') {
-      if (candidateRef.current?.name) {
-        const blockedNames = JSON.parse(localStorage.getItem('clubselect_blocked_names') || '[]');
-        const normName = candidateRef.current.name.trim().toLowerCase();
-        if (!blockedNames.includes(normName)) {
-          blockedNames.push(normName);
-          localStorage.setItem('clubselect_blocked_names', JSON.stringify(blockedNames));
-        }
-      }
-
-      if (candidateRef.current?.email) {
-        const blockedEmails = JSON.parse(localStorage.getItem('clubselect_blocked_emails') || '[]');
-        const normEmail = candidateRef.current.email.trim().toLowerCase();
-        if (!blockedEmails.includes(normEmail)) {
-          blockedEmails.push(normEmail);
-          localStorage.setItem('clubselect_blocked_emails', JSON.stringify(blockedEmails));
-        }
-      }
+      // Local storage hard-blocking removed. 
+      // Rely solely on session-based blocking sent to the backend.
     }
 
     if (sessionRef.current) {
       const blockedEvt: IntegrityEvent = {
         id: `evt-block-${Date.now()}`,
+        attemptId: sessionRef.current.id,
         type: 'BLOCKED_DISQUALIFIED',
         timestamp: new Date().toISOString(),
         details: `STRICT AUTO-BLOCK TRIGGERED: ${reason}. Candidate session permanently terminated.`,
@@ -146,107 +127,94 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
 
   // Initial candidate & assessment setup
   useEffect(() => {
-    const allAsmnts = getAllAssessments();
-    const candidates = getCandidates();
-    let candByToken = candidates.find((c) => c.invitationToken === token);
+    fetchServerData().then(() => {
+      const allAsmnts = getAllAssessments();
+      const allVersions = getExamVersions();
+      const candidates = getCandidates();
+      let candByToken = candidates.find((c) => c.invitationToken === token);
 
-    let asmnt =
-      allAsmnts.find(
-        (a) =>
-          a.sharableToken === token ||
-          a.id === token ||
-          (candByToken && candByToken.assessmentId === a.id)
-      ) || getAssessment();
+      let asmnt =
+        allAsmnts.find(
+          (a) =>
+            a.sharableToken === token ||
+            a.id === token ||
+            (candByToken && candByToken.assessmentId === a.id)
+        ) || getAssessment();
 
-    setAssessment(asmnt);
+      setAssessment(asmnt);
 
-    if (asmnt.durationMinutes) {
-      setSecondsRemaining(asmnt.durationMinutes * 60);
-    }
-
-    if (asmnt.linkExpiresAt && new Date(asmnt.linkExpiresAt).getTime() < Date.now()) {
-      setStep('EXPIRED_LINK');
-      return;
-    }
-
-    if (typeof window !== 'undefined') {
-      const searchParams = new URLSearchParams(window.location.search);
-      if (searchParams.get('new') === '1' || searchParams.get('preview') === 'true') {
-        sessionStorage.removeItem(`active_cand_${token}`);
+      if (asmnt.durationMinutes) {
+        setSecondsRemaining(asmnt.durationMinutes * 60);
       }
-    }
 
-    const activeCandId = typeof window !== 'undefined' ? sessionStorage.getItem(`active_cand_${token}`) : null;
-    let cand = activeCandId ? candidates.find((c) => c.id === activeCandId) : candByToken || null;
-
-    if (cand) {
-      setCandidate(cand);
-      setCandidateName(cand.name);
-      setCandidateEmail(cand.email);
-
-      const existingSession = getSessionByCandidate(cand.id);
-
-      if (cand.status === 'BLOCKED' || (existingSession?.isBlocked === true && cand.status !== 'INVITED')) {
-        setStep('BLOCKED');
+      if (asmnt.linkExpiresAt && new Date(asmnt.linkExpiresAt).getTime() < Date.now()) {
+        setStep('EXPIRED_LINK');
         return;
       }
 
-      if (cand.status === 'SUBMITTED' || existingSession?.submittedAt) {
-        setStep('COMPLETED');
-        return;
+      if (typeof window !== 'undefined') {
+        const searchParams = new URLSearchParams(window.location.search);
+        if (searchParams.get('new') === '1' || searchParams.get('preview') === 'true') {
+          sessionStorage.removeItem(`active_cand_${token}`);
+        }
       }
 
-      if (existingSession) {
-        setSession(existingSession);
-        const ansObj: Record<string, string | string[]> = {};
-        Object.entries(existingSession.answers).forEach(([qId, answer]) => {
-          ansObj[qId] = answer.candidateResponse;
-        });
-        setAnswers(ansObj);
+      const activeCandId = typeof window !== 'undefined' ? sessionStorage.getItem(`active_cand_${token}`) : null;
+      let cand = activeCandId ? candidates.find((c) => c.id === activeCandId) : candByToken || null;
+
+      if (cand) {
+        setCandidate(cand);
+        setCandidateName(cand.name);
+        setCandidateEmail(cand.email);
+
+        const existingSession = getSessionByCandidate(cand.id);
+
+        if (cand.status === 'BLOCKED' || (existingSession?.isBlocked === true && cand.status !== 'INVITED')) {
+          setStep('BLOCKED');
+          return;
+        }
+
+        if (cand.status === 'SUBMITTED' || existingSession?.submittedAt) {
+          setStep('COMPLETED');
+          return;
+        }
+
+        if (existingSession) {
+          setSession(existingSession);
+          const version = allVersions.find(v => v.id === existingSession.examVersionId);
+          if (version) setExamVersion(version);
+          
+          const ansObj: Record<string, string | string[]> = {};
+          Object.entries(existingSession.answers).forEach(([qId, answer]) => {
+            ansObj[qId] = answer.candidateResponse;
+          });
+          setAnswers(ansObj);
+          setStep('SYSTEM_CHECK');
+        } else {
+          // Unlikely to hit this branch without session, but fallback
+          setStep('REGISTER');
+        }
       } else {
-        const now = new Date();
-        const expiresAt = new Date(now.getTime() + asmnt.durationMinutes * 60 * 1000).toISOString();
-        const newSession: Session = {
-          id: `sess-${cand.id}`,
-          adminEmail: asmnt.adminEmail || cand.adminEmail || 'admin@testora.com',
-          candidateId: cand.id,
-          candidateName: cand.name,
-          candidateEmail: cand.email,
-          assessmentId: asmnt.id,
-          startedAt: now.toISOString(),
-          expiresAt,
-          answers: {},
-          integrityEvents: [
-            {
-              id: `evt-${Date.now()}`,
-              type: 'FULLSCREEN_ENTER',
-              timestamp: now.toISOString(),
-              details: 'Candidate initiated assessment session.',
-            },
-          ],
-          reviewStatus: 'CLEAN',
-        };
-        saveSession(newSession);
-        setSession(newSession);
+        if (isCandidateBlockedLocally()) {
+          setStep('BLOCKED');
+        } else {
+          setStep('REGISTER');
+        }
       }
-      setStep('SYSTEM_CHECK');
-    } else {
-      if (isNameOrDeviceBlockedLocally()) {
-        setStep('BLOCKED');
-      } else {
-        setStep('REGISTER');
-      }
-    }
+    });
   }, [token]);
 
   // Handle Shared Link Registration
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!candidateName.trim() || !assessment) return;
+    if (!candidateName.trim() || !assessment || !assessment.currentVersionId) {
+      alert('Assessment is not ready or has no published version.');
+      return;
+    }
 
     const emailToUse = candidateEmail.trim() || `${candidateName.toLowerCase().replace(/[^a-z0-9]/g, '')}@candidate.com`;
 
-    if (isNameOrDeviceBlockedLocally(candidateName, emailToUse)) {
+    if (isCandidateBlockedLocally()) {
       setStep('BLOCKED');
       return;
     }
@@ -263,12 +231,17 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
       email: emailToUse,
       invitationToken: token,
       assessmentId: assessment.id,
-      status: 'SYSTEM_CHECK_PASSED',
+      status: 'IN_PROGRESS',
       invitedAt: new Date().toISOString(),
     };
 
     saveCandidate(newCand);
     setCandidate(newCand);
+
+    const versionIdToUse = assessment.currentVersionId;
+    const allVersions = getExamVersions();
+    const version = allVersions.find(v => v.id === versionIdToUse);
+    if (version) setExamVersion(version);
 
     const now = new Date();
     const expiresAt = new Date(now.getTime() + assessment.durationMinutes * 60 * 1000).toISOString();
@@ -279,12 +252,15 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
       candidateName: candidateName.trim(),
       candidateEmail: emailToUse,
       assessmentId: assessment.id,
+      examVersionId: versionIdToUse,
+      status: 'IN_PROGRESS',
       startedAt: now.toISOString(),
       expiresAt,
       answers: {},
       integrityEvents: [
         {
-          id: `evt-${Date.now()}`,
+          id: `evt-enter-${Date.now()}`,
+          attemptId: `sess-${candId}`,
           type: 'FULLSCREEN_ENTER',
           timestamp: now.toISOString(),
           details: 'Candidate initiated assessment session.',
@@ -347,6 +323,8 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
       const updatedAns = {
         ...session.answers,
         [questionId]: {
+          id: `ans-${session.id}-${questionId}`,
+          attemptId: session.id,
           questionId,
           candidateResponse: val,
           savedAt: new Date().toISOString(),
@@ -394,11 +372,13 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
       id: `sess-${candToUse.id}`,
       candidateId: candToUse.id,
       assessmentId: assessment.id,
+      examVersionId: assessment.currentVersionId || '',
+      status: 'IN_PROGRESS' as const,
       startedAt: nowStr,
       expiresAt: nowStr,
       answers: {},
       integrityEvents: [],
-      reviewStatus: 'CLEAN',
+      reviewStatus: 'CLEAN' as const,
     };
 
     const updatedSession: Session = {
@@ -409,7 +389,12 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
       submittedAt: nowStr,
     };
 
-    const scores = await calculateSessionScore(assessment, updatedSession);
+    const versionForScoring = examVersion || getExamVersionById(assessment.currentVersionId || '');
+    if (!versionForScoring) {
+      alert('Error: Could not locate exam version for scoring.');
+      return;
+    }
+    const scores = await calculateSessionScore(versionForScoring, updatedSession);
     updatedSession.objectiveScore = scores.objectiveScore;
     updatedSession.subjectiveScore = scores.subjectiveScore;
     updatedSession.totalScore = scores.totalScore;
@@ -443,7 +428,8 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  const currentQ: Question = assessment.questions[currentQuestionIndex];
+  const activeQuestions = examVersion?.questions || [];
+  const currentQ: Question | undefined = activeQuestions[currentQuestionIndex];
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col font-sans select-none">
@@ -582,7 +568,7 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
               <h3 className="font-bold text-white text-sm">Test Details:</h3>
               <ul className="list-disc list-inside space-y-1">
                 <li>Allocated Test Duration: <strong className="text-sky-400">{assessment.durationMinutes} Minutes</strong></li>
-                <li>Questions: <strong className="text-sky-400">{assessment.questions.length} Questions</strong></li>
+                <li>Questions: <strong className="text-sky-400">{activeQuestions.length} Questions</strong></li>
                 <li>Floating Watermark & Real-Time Autosave Active</li>
               </ul>
             </div>
@@ -641,7 +627,7 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
             <aside className="w-56 bg-slate-850 border-r border-slate-800 p-4 space-y-4 shrink-0 overflow-y-auto hidden sm:block">
               <div className="font-bold text-xs text-slate-400 uppercase tracking-wider">Question Navigator</div>
               <div className="grid grid-cols-3 gap-2">
-                {assessment.questions.map((q, idx) => {
+                {activeQuestions.map((q, idx) => {
                   const isAnswered = answers[q.id] !== undefined && answers[q.id] !== '';
                   const isCurrent = currentQuestionIndex === idx;
 
@@ -666,13 +652,14 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
 
             {/* Question Card */}
             <main className="flex-1 overflow-y-auto p-4 sm:p-8 max-w-3xl mx-auto space-y-6 w-full">
-              <div className="bg-slate-800/80 rounded-2xl border border-slate-700 p-6 space-y-4">
-                <div className="flex items-center justify-between text-xs text-slate-400 border-b border-slate-700/60 pb-3">
-                  <span className="font-bold text-sky-400">
-                    Question {currentQuestionIndex + 1} of {assessment.questions.length}
-                  </span>
-                  <span>{currentQ.marks} Marks • {currentQ.difficulty}</span>
-                </div>
+              {currentQ && (
+                <div className="bg-slate-800/80 rounded-2xl border border-slate-700 p-6 space-y-4">
+                  <div className="flex items-center justify-between text-xs text-slate-400 border-b border-slate-700/60 pb-3">
+                    <span className="font-bold text-sky-400">
+                      Question {currentQuestionIndex + 1} of {activeQuestions.length}
+                    </span>
+                    <span>{currentQ.marks} Marks • {currentQ.difficulty}</span>
+                  </div>
 
                 <h2 className="text-base sm:text-lg font-semibold text-white leading-relaxed">{currentQ.prompt}</h2>
 
@@ -770,6 +757,7 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
                   </div>
                 )}
               </div>
+              )}
 
               {/* Bottom Pagination */}
               <div className="flex items-center justify-between pt-4">
@@ -782,9 +770,9 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
                   Previous
                 </button>
 
-                {currentQuestionIndex < assessment.questions.length - 1 ? (
+                {currentQuestionIndex < activeQuestions.length - 1 ? (
                   <button
-                    onClick={() => setCurrentQuestionIndex((prev) => Math.min(assessment.questions.length - 1, prev + 1))}
+                    onClick={() => setCurrentQuestionIndex((prev) => Math.min(activeQuestions.length - 1, prev + 1))}
                     className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition shadow-md"
                   >
                     Next Question

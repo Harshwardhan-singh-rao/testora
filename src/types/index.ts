@@ -8,6 +8,7 @@ export interface Rubric {
 
 export interface Question {
   id: string;
+  examVersionId: string; // Hard boundary constraint
   prompt: string;
   type: QuestionType;
   options?: string[];
@@ -28,6 +29,15 @@ export interface IntegritySettings {
   allowCopyPaste: boolean;
 }
 
+export interface ExamVersion {
+  id: string;
+  examId: string;
+  versionNumber: number;
+  questions: Question[];
+  status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
+  createdAt: string;
+}
+
 export interface Assessment {
   id: string;
   adminEmail?: string;
@@ -38,11 +48,12 @@ export interface Assessment {
   linkExpiresAt?: string; // ISO date string for when the link expires
   passingPercentage: number;
   status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
-  questions: Question[];
   isRandomized: boolean;
   integritySettings: IntegritySettings;
   createdAt: string;
   sharableToken: string;
+  currentVersionId?: string; // Points to the currently published version
+  // Removed global questions array. Questions live in ExamVersion.
 }
 
 export interface Candidate {
@@ -52,7 +63,7 @@ export interface Candidate {
   email: string;
   invitationToken: string;
   assessmentId: string;
-  status: 'INVITED' | 'SYSTEM_CHECK_PASSED' | 'IN_PROGRESS' | 'SUBMITTED' | 'BLOCKED' | 'EXPIRED';
+  status: 'INVITED' | 'IN_PROGRESS' | 'SUBMITTED' | 'BLOCKED' | 'EXPIRED';
   invitedAt: string;
 }
 
@@ -65,38 +76,50 @@ export type EventType =
   | 'CLIPBOARD_PASTE'
   | 'RECONNECT'
   | 'WINDOW_RESIZE'
-  | 'BLOCKED_DISQUALIFIED';
+  | 'BLOCKED_DISQUALIFIED'
+  | 'AUTO_SUBMIT'
+  | 'MANUAL_SUBMIT'
+  | 'ATTEMPT_GRANTED';
 
 export interface IntegrityEvent {
   id: string;
+  attemptId: string;
   type: EventType;
   timestamp: string;
   details: string;
 }
 
 export interface Answer {
+  id: string;
+  attemptId: string;
   questionId: string;
   candidateResponse: string | string[];
   savedAt: string;
   isAutosaved: boolean;
 }
 
-export interface SubjectiveEvaluation {
-  questionId: string;
-  score: number;
-  maxScore: number;
-  rubricFeedback: string;
-  confidence: 'High' | 'Medium' | 'Low';
-  evaluator: string;
-}
+export type AttemptStatus = 
+  | 'NOT_STARTED'
+  | 'IN_PROGRESS'
+  | 'PAUSED'
+  | 'SUBMITTED'
+  | 'AUTO_SUBMITTED'
+  | 'EXPIRED'
+  | 'CANCELLED'
+  | 'REVOKED'
+  | 'REOPENED'
+  | 'BLOCKED';
 
-export interface Session {
+export interface Session { // Conceptually an "Attempt"
   id: string;
   adminEmail?: string;
   candidateId: string;
   candidateName?: string;
   candidateEmail?: string;
   assessmentId: string;
+  examVersionId: string; // The specific version locked to this attempt
+  invitationToken?: string;
+  status: AttemptStatus; // Strict state machine
   startedAt: string;
   submittedAt?: string;
   expiresAt: string;
@@ -114,12 +137,21 @@ export interface Session {
   blockedReason?: string;
 }
 
+export interface SubjectiveEvaluation {
+  questionId: string;
+  score: number;
+  maxScore: number;
+  rubricFeedback: string;
+  confidence: 'High' | 'Medium' | 'Low';
+  evaluator: string;
+}
+
 export interface AdminUser {
   id: string;
   name: string;
   email: string;
   password?: string;
-  role: 'SUPER_ADMIN' | 'ADMIN';
+  role: 'SUPER_ADMIN' | 'ADMIN' | 'REVIEWER';
   status: 'PENDING_APPROVAL' | 'APPROVED' | 'REJECTED';
   createdAt: string;
 }

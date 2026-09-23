@@ -23,7 +23,7 @@ import {
   LogOut,
   User
 } from 'lucide-react';
-import { fetchServerData, getAssessment, getCandidates, getSessions, saveCandidate, saveSession } from '@/lib/storage';
+import { fetchServerData, getAssessment, getCandidates, getSessions, saveCandidate, saveSession, getExamVersionById } from '@/lib/storage';
 import { getAssessmentUrl } from '@/lib/url';
 import { getCurrentAdmin, getAdminUsers, updateAdminStatus, logoutAdmin } from '@/lib/auth';
 import { AdminUser, Assessment, Candidate, Session } from '@/types';
@@ -106,6 +106,8 @@ export default function AdminDashboardPage() {
           candidateName: c.name,
           candidateEmail: c.email,
           assessmentId: c.assessmentId,
+          examVersionId: assessment.currentVersionId || '',
+          status: c.status === 'INVITED' ? 'NOT_STARTED' : c.status === 'BLOCKED' ? 'BLOCKED' : c.status === 'SUBMITTED' ? 'SUBMITTED' : 'IN_PROGRESS',
           startedAt: c.invitedAt,
           expiresAt: c.invitedAt,
           answers: {},
@@ -180,8 +182,12 @@ export default function AdminDashboardPage() {
     content += `SUBMITTED ANSWERS BREAKDOWN:\n`;
     content += `----------------------------------------------------\n\n`;
 
-    assessment.questions.forEach((q, idx) => {
-      const ans = session.answers[q.id];
+    const version = getExamVersionById(session.examVersionId);
+    if (!version) {
+       content += `Error: Could not locate Exam Version for this session.\n`;
+    } else {
+      version.questions.forEach((q, idx) => {
+        const ans = session.answers[q.id];
       const evalRes = session.evaluations?.[q.id];
       const respStr = Array.isArray(ans?.candidateResponse) ? ans.candidateResponse.join(', ') : ans?.candidateResponse || 'No response submitted';
 
@@ -193,6 +199,7 @@ export default function AdminDashboardPage() {
       }
       content += `\n----------------------------------------------------\n\n`;
     });
+    }
 
     const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -254,6 +261,9 @@ export default function AdminDashboardPage() {
   const pendingAdminUsers = adminUsers.filter((u) => u.status === 'PENDING_APPROVAL' && u.role !== 'SUPER_ADMIN');
   const allSuperAdmins = adminUsers.filter((u) => u.role === 'SUPER_ADMIN');
   const approvedAdmins = adminUsers.filter((u) => u.role === 'ADMIN' && u.status === 'APPROVED');
+  
+  const activeVersion = getExamVersionById(assessment.currentVersionId || '');
+  const activeQuestions = activeVersion?.questions || [];
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Top Clean Header */}
@@ -261,7 +271,7 @@ export default function AdminDashboardPage() {
         <div>
           <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">{assessment.title}</h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            {assessment.clubName} • {assessment.questions.length} Questions ({assessment.questions.reduce((a, b) => a + b.marks, 0)} Marks) • Test Timer: {assessment.durationMinutes} Mins
+            {assessment.clubName} • {activeQuestions.length} Questions ({activeQuestions.reduce((a, b) => a + b.marks, 0)} Marks) • Test Timer: {assessment.durationMinutes} Mins
           </p>
         </div>
 
@@ -287,7 +297,7 @@ export default function AdminDashboardPage() {
             className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shadow-md transition"
           >
             <Plus className="h-4 w-4" />
-            Edit Questions ({assessment.questions.length})
+            Edit Questions ({activeQuestions.length})
           </Link>
         </div>
       </div>

@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
+export const dynamic = 'force-dynamic';
 import fs from 'fs';
 import path from 'path';
-import { AdminUser, Assessment, Candidate, Session } from '@/types';
-import { SEED_ADMIN_USERS, SEED_ASSESSMENT, SEED_CANDIDATES, SEED_SESSIONS } from '@/lib/seed-data';
+import { AdminUser, Assessment, ExamVersion, Candidate, Session, Answer } from '@/types';
+import { SEED_ADMIN_USERS, SEED_ASSESSMENT, SEED_EXAM_VERSIONS, SEED_CANDIDATES, SEED_SESSIONS } from '@/lib/seed-data';
 
 const dataDir = path.join(process.cwd(), 'data');
 const dbFilePath = path.join(dataDir, 'db.json');
@@ -10,6 +11,7 @@ const dbFilePath = path.join(dataDir, 'db.json');
 interface DatabaseSchema {
   assessment: Assessment;
   assessments?: Assessment[];
+  examVersions: ExamVersion[];
   candidates: Candidate[];
   sessions: Session[];
   adminUsers: AdminUser[];
@@ -21,6 +23,7 @@ function ensureDbFile(): DatabaseSchema {
   if (inMemoryDb) {
     if (!inMemoryDb.adminUsers) inMemoryDb.adminUsers = SEED_ADMIN_USERS;
     if (!inMemoryDb.assessments) inMemoryDb.assessments = [SEED_ASSESSMENT];
+    if (!inMemoryDb.examVersions) inMemoryDb.examVersions = SEED_EXAM_VERSIONS;
     return inMemoryDb;
   }
 
@@ -30,6 +33,7 @@ function ensureDbFile(): DatabaseSchema {
       inMemoryDb = JSON.parse(raw);
       if (!inMemoryDb!.adminUsers) inMemoryDb!.adminUsers = SEED_ADMIN_USERS;
       if (!inMemoryDb!.assessments) inMemoryDb!.assessments = [inMemoryDb!.assessment || SEED_ASSESSMENT];
+      if (!inMemoryDb!.examVersions) inMemoryDb!.examVersions = SEED_EXAM_VERSIONS;
       return inMemoryDb!;
     }
   } catch (err) {
@@ -39,6 +43,7 @@ function ensureDbFile(): DatabaseSchema {
   inMemoryDb = {
     assessment: SEED_ASSESSMENT,
     assessments: [SEED_ASSESSMENT],
+    examVersions: SEED_EXAM_VERSIONS,
     candidates: SEED_CANDIDATES,
     sessions: SEED_SESSIONS,
     adminUsers: SEED_ADMIN_USERS,
@@ -77,7 +82,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const db = ensureDbFile();
-    const { action, candidate, session, assessment, adminUser, adminUserId, status } = body;
+    const { action, candidate, session, assessment, examVersion, adminUser, adminUserId, status, attemptId, questionId, candidateResponse } = body;
 
     if (action === 'saveCandidate' && candidate) {
       const idx = db.candidates.findIndex((c) => c.id === candidate.id);
@@ -93,6 +98,27 @@ export async function POST(request: Request) {
       } else {
         db.sessions.push(session);
       }
+    } else if (action === 'saveAnswer' && attemptId && questionId) {
+      const sessIdx = db.sessions.findIndex((s) => s.id === attemptId);
+      if (sessIdx >= 0) {
+        const sess = db.sessions[sessIdx];
+        if (new Date(sess.expiresAt).getTime() < Date.now()) {
+           return NextResponse.json({ success: false, error: 'Session expired' }, { status: 403 });
+        }
+        if (sess.status === 'SUBMITTED' || sess.status === 'AUTO_SUBMITTED') {
+           return NextResponse.json({ success: false, error: 'Session already submitted' }, { status: 403 });
+        }
+        
+        const answer: Answer = {
+          id: `ans-${attemptId}-${questionId}`,
+          attemptId,
+          questionId,
+          candidateResponse,
+          savedAt: new Date().toISOString(),
+          isAutosaved: true
+        };
+        db.sessions[sessIdx].answers[questionId] = answer;
+      }
     } else if (action === 'saveAssessment' && assessment) {
       db.assessment = assessment;
       if (!db.assessments) db.assessments = [];
@@ -102,6 +128,19 @@ export async function POST(request: Request) {
         db.assessments[idx] = assessment;
       } else {
         db.assessments.push(assessment);
+      }
+    } else if (action === 'saveExamVersion' && examVersion) {
+      if (!db.examVersions) db.examVersions = [];
+      const idx = db.examVersions.findIndex(v => v.id === examVersion.id);
+      if (idx >= 0) {
+        // Only allow updating drafts
+        if (db.examVersions[idx].status === 'DRAFT') {
+           db.examVersions[idx] = examVersion;
+        } else if (examVersion.status === 'ARCHIVED') {
+           db.examVersions[idx].status = 'ARCHIVED';
+        }
+      } else {
+        db.examVersions.push(examVersion);
       }
     } else if (action === 'saveAdminUser' && adminUser) {
       const idx = db.adminUsers.findIndex((u) => u.id === adminUser.id || (u.email && adminUser.email && u.email.toLowerCase() === adminUser.email.toLowerCase()));
@@ -123,10 +162,20 @@ export async function POST(request: Request) {
           isBlocked: false,
           reviewStatus: 'NEEDS_REVIEW',
           finalDecision: 'PENDING',
+          status: 'REOPENED'
         };
+      }
+    } else if (action === 'grantReattempt' && candidate) {
+      const idx = db.candidates.findIndex((c) => c.id === candidate.id);
+      if (idx >= 0) {
+        db.candidates[idx].status = 'INVITED';
+        // Delete their session so they can start fresh
+        db.sessions = db.sessions.filter((s) => s.candidateId !== candidate.id);
       }
     } else if (action === 'reset') {
       db.assessment = SEED_ASSESSMENT;
+      db.assessments = [SEED_ASSESSMENT];
+      db.examVersions = SEED_EXAM_VERSIONS;
       db.candidates = SEED_CANDIDATES;
       db.sessions = SEED_SESSIONS;
       db.adminUsers = SEED_ADMIN_USERS;

@@ -1,4 +1,4 @@
-import { Assessment, Question, Session, SubjectiveEvaluation } from '@/types';
+import { Assessment, ExamVersion, Question, Session, SubjectiveEvaluation } from '@/types';
 import { evaluateSubjectiveAnswer } from './ai-service';
 
 export interface ScoreBreakdown {
@@ -34,7 +34,7 @@ export const scoreObjectiveQuestion = (question: Question, response: string | st
 };
 
 export const calculateSessionScore = async (
-  assessment: Assessment,
+  examVersion: ExamVersion,
   session: Session
 ): Promise<ScoreBreakdown> => {
   let objectiveScore = 0;
@@ -42,7 +42,7 @@ export const calculateSessionScore = async (
   let maxScore = 0;
   const evaluations: Record<string, SubjectiveEvaluation> = {};
 
-  for (const q of assessment.questions) {
+  for (const q of examVersion.questions) {
     maxScore += q.marks;
     const answer = session.answers[q.id];
 

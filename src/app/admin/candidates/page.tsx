@@ -248,7 +248,24 @@ export default function CandidatesPage() {
                       )}
                     </td>
 
-                    <td className="py-4 px-4 text-right">
+                    <td className="py-4 px-4 text-right space-x-2">
+                      {(c.status === 'BLOCKED' || c.status === 'SUBMITTED') && getCurrentAdmin()?.role === 'SUPER_ADMIN' && (
+                        <button
+                          onClick={() => {
+                            if (confirm('Are you sure you want to reset this candidate and allow a reattempt? This will delete their previous session data.')) {
+                              import('@/lib/storage').then(({ grantReattempt }) => {
+                                grantReattempt(c);
+                                clearLocalBlockCacheForEmail(c.email);
+                                setCandidates(getCandidates(getCurrentAdmin()?.email));
+                              });
+                            }
+                          }}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-600 text-white font-semibold text-xs hover:bg-amber-700 transition"
+                        >
+                          <RotateCcw className="h-3.5 w-3.5" />
+                          Reattempt
+                        </button>
+                      )}
                       <Link
                         href={`/assessment/${c.invitationToken}`}
                         onClick={() => clearLocalBlockCacheForEmail(c.email)}
