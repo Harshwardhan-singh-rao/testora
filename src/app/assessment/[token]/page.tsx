@@ -131,8 +131,9 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
       const allAsmnts = getAllAssessments();
       const allVersions = getExamVersions();
       const candidates = getCandidates();
-      let asmnt = allAsmnts.find((a) => a.sharableToken === token || a.id === token);
+      const matchedAsmnt = allAsmnts.find((a) => a.sharableToken === token || a.id === token);
       let candByToken: Candidate | null | undefined = null;
+      let asmnt: Assessment | null | undefined = matchedAsmnt;
 
       if (!asmnt) {
         candByToken = candidates.find((c) => c.invitationToken === token);
@@ -162,7 +163,15 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
       }
 
       const activeCandId = typeof window !== 'undefined' ? sessionStorage.getItem(`active_cand_${token}`) : null;
-      let cand = activeCandId ? candidates.find((c) => c.id === activeCandId) : candByToken || null;
+      
+      // On shared assessment links (matchedAsmnt exists), resolve candidate ONLY from activeCandId in sessionStorage.
+      // Individual candByToken matching is reserved strictly for personal candidate invitation links.
+      let cand: Candidate | null = null;
+      if (activeCandId) {
+        cand = candidates.find((c) => c.id === activeCandId) || null;
+      } else if (!matchedAsmnt && candByToken) {
+        cand = candByToken;
+      }
 
       if (cand) {
         setCandidate(cand);
@@ -193,15 +202,10 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
           setAnswers(ansObj);
           setStep('SYSTEM_CHECK');
         } else {
-          // Unlikely to hit this branch without session, but fallback
           setStep('REGISTER');
         }
       } else {
-        if (isCandidateBlockedLocally()) {
-          setStep('BLOCKED');
-        } else {
-          setStep('REGISTER');
-        }
+        setStep('REGISTER');
       }
     });
   }, [token]);
@@ -216,12 +220,7 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
 
     const emailToUse = candidateEmail.trim() || `${candidateName.toLowerCase().replace(/[^a-z0-9]/g, '')}@candidate.com`;
 
-    if (isCandidateBlockedLocally()) {
-      setStep('BLOCKED');
-      return;
-    }
-
-    const candId = `cand-live-${Date.now()}`;
+    const candId = `cand-live-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     if (typeof window !== 'undefined') {
       sessionStorage.setItem(`active_cand_${token}`, candId);
     }
@@ -231,7 +230,7 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
       adminEmail: assessment.adminEmail || 'admin@testora.com',
       name: candidateName.trim(),
       email: emailToUse,
-      invitationToken: token,
+      invitationToken: `cand-token-${candId}`,
       assessmentId: assessment.id,
       status: 'IN_PROGRESS',
       invitedAt: new Date().toISOString(),
@@ -818,9 +817,26 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
             <div>Email Address: <span className="text-slate-200 font-semibold">{candidate?.email || candidateEmail}</span></div>
             <div>Status: <span className="text-rose-400 font-bold">PERMANENTLY BLOCKED</span></div>
             <p className="text-[11px] text-slate-500 pt-2 border-t border-slate-700/60 mt-2">
-              Re-entry using this name, email address, or device is permanently disabled and reported to the assessment administrator.
+              Re-entry using this candidate attempt is disabled and logged for the assessment administrator.
             </p>
           </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window !== 'undefined') {
+                sessionStorage.removeItem(`active_cand_${token}`);
+              }
+              setCandidate(null);
+              setSession(null);
+              setCandidateName('');
+              setCandidateEmail('');
+              setStep('REGISTER');
+            }}
+            className="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-700 transition"
+          >
+            Register as Another Candidate
+          </button>
         </div>
       )}
 
