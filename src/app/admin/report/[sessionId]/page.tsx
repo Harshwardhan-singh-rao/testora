@@ -83,10 +83,22 @@ export default function SessionReportPage({ params }: { params: Promise<{ sessio
     );
   }
 
-  const handleDecisionChange = (decision: 'ACCEPTED' | 'REJECTED' | 'PENDING') => {
-    const updated = { ...session, finalDecision: decision };
+  const [decisionFeedback, setDecisionFeedback] = useState<string | null>(null);
+
+  const handleDecisionChange = (targetDecision: 'ACCEPTED' | 'REJECTED') => {
+    const newDecision = session.finalDecision === targetDecision ? 'PENDING' : targetDecision;
+    const updated = { ...session, finalDecision: newDecision as Session['finalDecision'] };
     setSession(updated);
     saveSession(updated);
+
+    const feedbackMsg = newDecision === 'ACCEPTED'
+      ? 'Candidate Marked as ACCEPTED ✓'
+      : newDecision === 'REJECTED'
+      ? 'Candidate Marked as REJECTED ✕'
+      : 'Decision reset to PENDING';
+
+    setDecisionFeedback(feedbackMsg);
+    setTimeout(() => setDecisionFeedback(null), 3000);
   };
 
   const handleSaveNotes = () => {
@@ -158,9 +170,16 @@ export default function SessionReportPage({ params }: { params: Promise<{ sessio
 
         {/* Action Controls: Download File & Decision */}
         <div className="flex items-center gap-3 flex-wrap">
+          {decisionFeedback && (
+            <span className="inline-flex items-center gap-1 text-xs font-bold px-3 py-1.5 rounded-xl bg-slate-900 text-white shadow-md animate-in fade-in">
+              <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+              {decisionFeedback}
+            </span>
+          )}
+
           <button
             onClick={handleDownloadAnswersFile}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md transition"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md transition cursor-pointer"
           >
             <FileDown className="h-4 w-4" />
             Download Answers File (.txt)
@@ -169,25 +188,26 @@ export default function SessionReportPage({ params }: { params: Promise<{ sessio
           <div className="flex items-center gap-2">
             <button
               onClick={() => handleDecisionChange('ACCEPTED')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+              className={`px-4 py-2.5 rounded-xl text-xs font-black transition flex items-center gap-1.5 shadow-md cursor-pointer ${
                 session.finalDecision === 'ACCEPTED'
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200'
+                  ? 'bg-emerald-600 text-white ring-2 ring-emerald-500/50'
+                  : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-300'
               }`}
             >
-              <CheckCircle2 className="h-3.5 w-3.5" />
-              ACCEPT
+              <CheckCircle2 className="h-4 w-4 stroke-[2.5]" />
+              {session.finalDecision === 'ACCEPTED' ? 'ACCEPTED ✓' : 'ACCEPT'}
             </button>
+
             <button
               onClick={() => handleDecisionChange('REJECTED')}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+              className={`px-4 py-2.5 rounded-xl text-xs font-black transition flex items-center gap-1.5 shadow-md cursor-pointer ${
                 session.finalDecision === 'REJECTED'
-                  ? 'bg-rose-600 text-white shadow-sm'
-                  : 'bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200'
+                  ? 'bg-rose-600 text-white ring-2 ring-rose-500/50'
+                  : 'bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-300'
               }`}
             >
-              <XCircle className="h-3.5 w-3.5" />
-              REJECT
+              <XCircle className="h-4 w-4 stroke-[2.5]" />
+              {session.finalDecision === 'REJECTED' ? 'REJECTED ✕' : 'REJECT'}
             </button>
           </div>
         </div>

@@ -451,26 +451,43 @@ export default function AdminDashboardPage() {
                       </td>
 
                       <td className="py-4 px-4">
-                        {session.finalDecision === 'ACCEPTED' && (
-                          <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 text-[11px] font-bold border border-emerald-200">
-                            ACCEPTED
-                          </span>
-                        )}
-                        {session.finalDecision === 'REJECTED' && (
-                          <span className="px-2 py-0.5 rounded bg-rose-50 text-rose-700 text-[11px] font-bold border border-rose-200">
-                            REJECTED
-                          </span>
-                        )}
-                        {session.finalDecision === 'BLOCKED' && (
-                          <span className="px-2 py-0.5 rounded bg-rose-900 text-rose-100 text-[11px] font-bold">
-                            DISQUALIFIED
-                          </span>
-                        )}
-                        {(!session.finalDecision || session.finalDecision === 'PENDING') && (
-                          <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-600 text-[11px] font-medium">
-                            PENDING
-                          </span>
-                        )}
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            onClick={() => {
+                              const newDec = session.finalDecision === 'ACCEPTED' ? 'PENDING' : 'ACCEPTED';
+                              const updated = { ...session, finalDecision: newDec as Session['finalDecision'] };
+                              saveSession(updated);
+                              setSessions(getSessions(currentAdmin?.role === 'SUPER_ADMIN' ? undefined : currentAdmin?.email));
+                            }}
+                            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
+                              session.finalDecision === 'ACCEPTED'
+                                ? 'bg-emerald-600 text-white shadow-sm'
+                                : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200'
+                            }`}
+                            title="Toggle Accept Candidate"
+                          >
+                            <CheckCircle2 className="h-3 w-3" />
+                            {session.finalDecision === 'ACCEPTED' ? 'ACCEPTED ✓' : 'Accept'}
+                          </button>
+
+                          <button
+                            onClick={() => {
+                              const newDec = session.finalDecision === 'REJECTED' ? 'PENDING' : 'REJECTED';
+                              const updated = { ...session, finalDecision: newDec as Session['finalDecision'] };
+                              saveSession(updated);
+                              setSessions(getSessions(currentAdmin?.role === 'SUPER_ADMIN' ? undefined : currentAdmin?.email));
+                            }}
+                            className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition flex items-center gap-1 cursor-pointer ${
+                              session.finalDecision === 'REJECTED'
+                                ? 'bg-rose-600 text-white shadow-sm'
+                                : 'bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200'
+                            }`}
+                            title="Toggle Reject Candidate"
+                          >
+                            <XCircle className="h-3 w-3" />
+                            {session.finalDecision === 'REJECTED' ? 'REJECTED ✕' : 'Reject'}
+                          </button>
+                        </div>
                       </td>
 
                       <td className="py-4 px-4 text-right space-x-2">
