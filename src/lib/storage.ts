@@ -60,7 +60,7 @@ export const getAssessment = (adminEmail?: string): Assessment => {
   let targetEmail = adminEmail;
   if (!targetEmail) {
     // If no email provided, fall back to currently logged in admin if available
-    const activeStored = localStorage.getItem('clubselect_current_admin');
+    const activeStored = sessionStorage.getItem('clubselect_current_admin') || localStorage.getItem('clubselect_current_admin');
     if (activeStored) {
       try {
         const parsed = JSON.parse(activeStored);

@@ -39,7 +39,7 @@ export const saveAdminUser = (user: AdminUser): void => {
 
 export const getCurrentAdmin = (): AdminUser | null => {
   if (typeof window === 'undefined') return null;
-  const stored = localStorage.getItem(STORAGE_KEYS.CURRENT_ADMIN);
+  const stored = sessionStorage.getItem(STORAGE_KEYS.CURRENT_ADMIN);
   if (!stored) return null;
   try {
     return JSON.parse(stored);
@@ -51,8 +51,10 @@ export const getCurrentAdmin = (): AdminUser | null => {
 export const setCurrentAdmin = (user: AdminUser | null): void => {
   if (typeof window === 'undefined') return;
   if (user) {
-    localStorage.setItem(STORAGE_KEYS.CURRENT_ADMIN, JSON.stringify(user));
+    sessionStorage.setItem(STORAGE_KEYS.CURRENT_ADMIN, JSON.stringify(user));
+    localStorage.removeItem(STORAGE_KEYS.CURRENT_ADMIN);
   } else {
+    sessionStorage.removeItem(STORAGE_KEYS.CURRENT_ADMIN);
     localStorage.removeItem(STORAGE_KEYS.CURRENT_ADMIN);
   }
 };
