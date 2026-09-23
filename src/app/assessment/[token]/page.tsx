@@ -213,12 +213,17 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
   // Handle Shared Link Registration
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!candidateName.trim() || !assessment || !assessment.currentVersionId) {
+    if (!candidateName.trim() || !candidateEmail.trim()) {
+      alert('Please fill out both your full name and a valid email address.');
+      return;
+    }
+
+    if (!assessment || !assessment.currentVersionId) {
       alert('Assessment is not ready or has no published version.');
       return;
     }
 
-    const emailToUse = candidateEmail.trim() || `${candidateName.toLowerCase().replace(/[^a-z0-9]/g, '')}@candidate.com`;
+    const emailToUse = candidateEmail.trim();
 
     const candId = `cand-live-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
     if (typeof window !== 'undefined') {
@@ -478,10 +483,11 @@ export default function CandidateAssessmentPage({ params }: { params: Promise<{ 
               <div className="space-y-1">
                 <label className="font-semibold text-slate-300 flex items-center gap-1.5">
                   <Mail className="h-3.5 w-3.5 text-sky-400" />
-                  Your Email Address (Optional)
+                  Your Email Address <span className="text-rose-400">*</span>
                 </label>
                 <input
                   type="email"
+                  required
                   placeholder="Enter your email address"
                   value={candidateEmail}
                   onChange={(e) => setCandidateEmail(e.target.value)}
